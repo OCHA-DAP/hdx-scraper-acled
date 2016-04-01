@@ -71,7 +71,7 @@ class Resource:
 
     def update(self, resource_package):
         '''
-        Updates a dataset on HDX.
+        Updates a resource on HDX.
 
         '''
         r = requests.post(
@@ -87,7 +87,7 @@ class Resource:
 
     def create(self):
         '''
-        Creates a dataset on HDX.
+        Creates a resource on HDX.
 
         '''
         if self.state['exists'] is True:

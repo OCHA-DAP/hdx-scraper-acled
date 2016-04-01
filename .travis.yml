@@ -7,13 +7,12 @@ python:
 #
 install:
   - pip install coveralls codecov
-  - make setup
+  - pip install -r requirements.txt
 
 #
 # Run tests + coverage.
 #
-script:
-  - make test
+script: nosetests
 
 #
 # Send coverage report to coveralls.io

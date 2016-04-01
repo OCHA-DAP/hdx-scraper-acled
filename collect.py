@@ -12,18 +12,20 @@ def main():
     Wrapper.
 
     '''
+    firstrun = False
     server = 'http://test-data.hdx.rwlabs.org'
     objects = generate_urls()
     parsed_data = parse(objects)
 
-    create_datasets(datasets=parsed_data['datasets'],
-                    hdx_site=server, apikey=os.getenv('HDX_KEY'))
+    if firstrun:
+        create_datasets(datasets=parsed_data['datasets'],
+                        hdx_site=server, apikey=os.getenv('HDX_KEY'))
+        create_gallery_items(gallery_items=parsed_data['gallery_items'],
+                             hdx_site=server, apikey=os.getenv('HDX_KEY'))
 
     create_resources(resources=parsed_data['resources'],
                      hdx_site=server, apikey=os.getenv('HDX_KEY'))
 
-    create_gallery_items(gallery_items=parsed_data['gallery_items'],
-                         hdx_site=server, apikey=os.getenv('HDX_KEY'))
 
 
 if __name__ == '__main__':

@@ -1,0 +1,26 @@
+language: python
+python:
+  - "3.5"
+
+#
+# Command to install dependencies.
+#
+install:
+  - pip install coveralls codecov
+  - make setup
+
+#
+# Run tests + coverage.
+#
+script:
+  - make test
+
+#
+# Send coverage report to coveralls.io
+#
+after_success:
+  - coveralls
+  - codecov
+
+notifications:
+    email: false

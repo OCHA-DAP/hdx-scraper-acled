@@ -1,0 +1,5 @@
+awesome-slugify==1.6.5
+geonamescache==0.21
+requests==2.9.1
+termcolor==1.1.0
+tqdm==3.8.0

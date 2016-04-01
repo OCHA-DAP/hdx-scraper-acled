@@ -1,7 +1,7 @@
-### Collector for IFPRI's Datasets
+### Collector for ACLED's Africa Datasets
 [![Build Status](https://travis-ci.org/mcarans/hdxscraper-acled-africa.svg?branch=master)](https://travis-ci.org/mcarans/hdxscraper-acled-africa) [![Coverage Status](https://coveralls.io/repos/github/mcarans/hdxscraper-acled-africa/badge.svg?branch=master)](https://coveralls.io/github/mcarans/hdxscraper-acled-africa?branch=master)
 
-Collector designed to collect datasets from the [ACLED](http://www.acleddata.com/) website.
+Collector designed to collect the Africa datasets from the [ACLED](http://www.acleddata.com/) website.
 
 ### Usage
 python register.py

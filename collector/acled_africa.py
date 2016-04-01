@@ -8,20 +8,17 @@ Generates Africa csv and xls from the ACLED website.
 
 '''
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import geonamescache
 
 
-def generate_urls():
+def generate_urls(base_url, today, iso=None):
     '''Parse urls of the form
       CSV: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319_csv.zip
       XLSX: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319.xlsx
     '''
 
-    base_url = 'http://www.acleddata.com/wp-content/uploads/'
-
-    today = datetime.now()
     start_week = today - timedelta(days=(today.weekday() + 2) % 7)
     dataset_date = start_week.strftime('%m/%d/%Y')  # has to be MM/DD/YYYY
     start_week_url = start_week.strftime('%Y/%m')
@@ -36,10 +33,11 @@ def generate_urls():
     name = 'Africa (Realtime - %s)' % year
     gc = geonamescache.GeonamesCache()
     countries = gc.get_countries()
-    iso = list()
-    for country in countries.values():
-        if country.get('continentcode') == 'AF':
-            iso.append({'id': country.get('iso3').lower()})
+    if not iso:
+        iso = list()
+        for country in countries.values():
+            if country.get('continentcode') == 'AF':
+                iso.append({'id': country.get('iso3').lower()})
 
     objects = []
     objects.append({

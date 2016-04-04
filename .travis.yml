@@ -12,7 +12,7 @@ install:
 #
 # Run tests + coverage.
 #
-script: nosetests
+script: nosetests --with-coverage
 
 #
 # Send coverage report to coveralls.io

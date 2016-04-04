@@ -27,3 +27,9 @@ class TestAcledAfrica(unittest.TestCase):
         actual_result = generate_urls('http://a.com/', today, "country")
 
         self.assertEquals(expected_result, actual_result)
+
+    def test_generate_countries(self):
+        today = datetime.strptime('01042016', "%d%m%Y").date()
+        actual_result = generate_urls('http://a.com/', today)
+
+        self.assertEquals(58, len(actual_result[0]['iso']))

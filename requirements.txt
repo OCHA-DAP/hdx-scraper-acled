@@ -1,5 +1,8 @@
 awesome-slugify==1.6.5
 geonamescache==0.21
+ndg-httpsclient==0.4.0
+pyasn1==0.1.9
+pyOpenSSL==16.0.0
 requests==2.9.1
 schedule==0.3.2
 scraperwiki==0.5.1

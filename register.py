@@ -10,6 +10,7 @@ that register datasets in HDX.
 '''
 import os
 from datetime import datetime
+from os.path import expanduser
 
 import scraperwiki
 
@@ -25,27 +26,29 @@ def main():
 
     try:
         #
-        # Setting up configuration: dev = development; prod = production.
+        # Setting up configuration
         #
-        p = load_config('config/config.json')
-        if p:
-            objects = generate_urls(p['base_url'], datetime.now())
-            parsed_data = parse(objects)
+        home = expanduser("~")
+        with open('%s/.hdxkey' % home, 'r') as f:
+            apikey = f.read().replace('\n', '')
 
-            print('--------------------------------------------------')
-            print('%s HDX Site: %s' % (I('bullet'), p['hdx_site']))
+            p = load_config('config/config.json')
+            if p:
+                objects = generate_urls(p['base_url'], datetime.now())
+                parsed_data = parse(objects)
 
-            #
-            # Create datasets, resources, and gallery items.
-            #
-            if p['first_run']:
+                print('--------------------------------------------------')
+                print('%s HDX Site: %s' % (I('bullet'), p['hdx_site']))
+
+                #
+                # Create datasets, resources, and gallery items.
+                #
                 create_datasets(datasets=parsed_data['datasets'],
-                                hdx_site=p['hdx_site'], apikey=os.getenv('HDX_KEY'))
+                                hdx_site=p['hdx_site'], apikey=apikey)
                 create_gallery_items(gallery_items=parsed_data['gallery_items'],
-                                     hdx_site=p['hdx_site'], apikey=os.getenv('HDX_KEY'))
-
-            create_resources(resources=parsed_data['resources'],
-                             hdx_site=p['hdx_site'], apikey=os.getenv('HDX_KEY'))
+                                     hdx_site=p['hdx_site'], apikey=apikey)
+                create_resources(resources=parsed_data['resources'],
+                                 hdx_site=p['hdx_site'], apikey=apikey)
 
     except Exception as e:
         print(e)

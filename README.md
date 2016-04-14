@@ -6,4 +6,4 @@ Collector designed to collect the Africa datasets from the [ACLED](http://www.ac
 ### Usage
 python register.py
 
-You will need to set the environment variable `HDX_KEY` before running the registering option. That option was created to automatically register datasets on the [Humanitarian Data Exchange](http://data.hdx.rwlabs.org/) project.
+You will need to have a file called .hdxkey in your home directory containing only your HDX key for the register script to run. That script was created to automatically register datasets on the [Humanitarian Data Exchange](http://data.hdx.rwlabs.org/) project.

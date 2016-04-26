@@ -17,7 +17,7 @@ def enrich(basedata):
 
     '''
     title = 'ACLED Conflict Data for %s' % basedata['name']
-    slugified_name = slugify('ACLED Conflict Data for %s' % basedata['name']).lower()
+    slugified_name = slugify(title).lower()
 
     dataset = {
         'name': slugified_name,

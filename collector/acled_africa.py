@@ -13,10 +13,11 @@ from datetime import timedelta
 import geonamescache
 
 
-def generate_urls(base_url, today, iso=None):
+def generate_basedata(base_url, today, iso=None):
     '''Parse urls of the form
       CSV: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319_csv.zip
       XLSX: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319.xlsx
+      and create basic data for constructing a basedata
     '''
 
     start_week = today - timedelta(days=(today.weekday() + 2) % 7)
@@ -39,19 +40,17 @@ def generate_urls(base_url, today, iso=None):
             if country.get('continentcode') == 'AF':
                 iso.append({'id': country.get('iso3').lower()})
 
-    objects = []
-    objects.append({
-        'name': name,
-        'url': xlsx_url,
-        'iso': iso,
+    basedata = {}
+    basedata['name'] = name
+    basedata['dataset_date'] = dataset_date
+    basedata['iso'] = iso
+    basedata['resources'] = []
+    basedata['resources'].append({
         'format': 'xlsx',
-        'dataset_date': dataset_date
+        'url': xlsx_url
     })
-    objects.append({
-        'name': name,
-        'url': csv_url,
-        'iso': iso,
-        'format': 'zip',
-        'dataset_date': dataset_date
+    basedata['resources'].append({
+        'format': 'zipped csv',
+        'url': csv_url
     })
-    return objects
+    return basedata

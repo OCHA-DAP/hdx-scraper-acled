@@ -21,7 +21,7 @@ class Dataset:
 
     '''
 
-    def __init__(self, dataset_object, base_url, apikey):
+    def __init__(self, dataset_object, base_url, apikey, comparator=lambda a, b: a == b):
         if apikey is None:
             raise ValueError('Please provide API key.')
 
@@ -32,6 +32,7 @@ class Dataset:
             raise ValueError('Dataset object not provided.')
 
         self.apikey = apikey
+        self.comparator = comparator
         self.data = dataset_object
         self.url = {
             'base': base_url,
@@ -54,11 +55,18 @@ class Dataset:
             self.url['show'] + self.data['name'],
             headers=self.headers, auth=('dataproject', 'humdata')).json()
 
-        if check["success"] is True:
-            return {'exists': True, 'state': check['result']['state']}
-
+        if check['success'] is True and len(check['result']['resources']) > 0:
+            return {
+                'exists': True,
+                'resources': check['result']['resources'],
+                'state': check['result']['state']
+            }
         else:
-            return {'exists': False, 'state': 'Nonexistent'}
+            return {
+                'exists': False,
+                'resources': [],
+                'state': 'Nonexistent'
+            }
 
     def update(self):
         '''
@@ -70,7 +78,7 @@ class Dataset:
             headers=self.headers, auth=('dataproject', 'humdata'))
 
         if r.status_code != 200:
-            print("%s failed to create %s" % (item('error'), self.data['name']))
+            print("%s failed to update %s" % (item('error'), self.data['name']))
             print(r.text)
 
         else:
@@ -83,6 +91,9 @@ class Dataset:
         '''
         if self.state['exists'] is True:
             print("%s Dataset exists. Updating. %s" % (item('warn'), self.data['name']))
+            for resource in self.state['resources']:
+                if self.comparator(resource['name'], self.data['name']):
+                    self.data['id'] = resource['id']
             self.update()
             return
 

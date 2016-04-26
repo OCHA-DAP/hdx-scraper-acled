@@ -7,26 +7,28 @@ PARSER:
 Parser of scraper data in to HDX-ready data.
 
 '''
-from copy import copy
 
 from slugify import slugify
 
 
-def parse(objects):
+def enrich(basedata):
     '''
-    This parses data.
+    This adds HDX required fields to the basic data.
 
     '''
+    title = 'ACLED Conflict Data for %s' % basedata['name']
+    slugified_name = slugify('ACLED Conflict Data for %s' % basedata['name']).lower()
+
     dataset = {
-        'name': None,
-        'title': None,
+        'name': slugified_name,
+        'title': title,
         'owner_org': 'acled',
         'author': 'acled',
         'author_email': 'c.raleigh@acleddata.com',
         'maintainer': 'acled',
         'maintainer_email': 'c.raleigh@acleddata.com',
         'license_id': 'cc-by-sa',
-        'dataset_date': None,  # has to be MM/DD/YYYY
+        'dataset_date': basedata['dataset_date'],  # has to be MM/DD/YYYY
         'subnational': 1,  # has to be 0 or 1. Default 1 for ACLED.
         'notes': """ACLED conflict and protest data for African states from 1997 – December 2015 is available in Version 6 of the the ACLED dataset. Realtime data for 2016 is collected and published on a weekly basis, and will continue to be made available through the Climate Change and African Political Stability (CCAPS) website and on this page.
 
@@ -43,15 +45,7 @@ Data files are updated each Monday, containing data from the previous week. The 
         'url': None,
         'state': 'active',  # always "active".
         'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}],
-        'groups': []  # has to be ISO-3-letter-code. { 'id': None }
-    }
-
-    resource = {
-        'package_id': None,
-        'url': None,
-        'name': None,
-        'format': None,
-        'description': None
+        'groups': basedata['iso']  # has to be ISO-3-letter-code. { 'id': None }
     }
 
     gallery_item = {
@@ -60,35 +54,14 @@ Data files are updated each Monday, containing data from the previous week. The 
         'description': 'The dynamic maps below have been drawn from ACLED Version 6. They illustrate key dynamics in event types, reported fatalities, and actor categories. Clicking on the maps, and selecting or de-selecting options in the legends, allows users to interactively edit and manipulate the visualisations, and export or share the finished visuals. The maps are visualised using Tableau Public.',
         'url': 'http://www.acleddata.com/visuals/maps/dynamic-maps/',
         'image_url': 'http://docs.hdx.rwlabs.org/wp-content/uploads/acled_visual.png',
-        'dataset_id': None
+        'dataset_id': slugified_name
     }
 
-    datasets = []
-    resources = []
-    gallery_items = []
-
-    for object in objects:
-        title = 'ACLED Conflict Data for %s' % object['name']
-        slugified_name = slugify('ACLED Conflict Data for %s' % object['name']).lower()
-        dataset['name'] = slugified_name
-        dataset['title'] = title
-        dataset['groups'] = object['iso']
-        dataset['dataset_date'] = object['dataset_date']
-
+    resources = basedata['resources']
+    for resource in resources:
         resource['package_id'] = slugified_name
-        resource['name'] = object['url'].rsplit('/', 1)[-1]
-        resource['description'] = '%s (%s)' % (title, object['format'])
-        resource['url'] = object['url']
-        resource['format'] = object['format']
+        resource['name'] = resource['url'].rsplit('/', 1)[-1]
+        resource['description'] = '%s (%s)' % (title, resource['format'])
 
-        gallery_item['dataset_id'] = slugified_name
-
-        resources.append(copy(resource))
-
-    datasets.append(copy(dataset))
-    gallery_items.append(copy(gallery_item))
-    return {
-        'datasets': datasets,
-        'resources': resources,
-        'gallery_items': gallery_items
-    }
+    dataset['resources'] = resources
+    return dataset, gallery_item

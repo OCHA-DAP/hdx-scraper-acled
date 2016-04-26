@@ -21,7 +21,7 @@ class Resource:
 
     '''
 
-    def __init__(self, resource_object, base_url, apikey):
+    def __init__(self, resource_object, base_url, apikey, comparator=lambda a, b: a == b):
         if apikey is None:
             raise ValueError('Please provide API key.')
 
@@ -32,6 +32,7 @@ class Resource:
             raise ValueError('Dataset object not provided.')
 
         self.apikey = apikey
+        self.comparator = comparator
         self.data = resource_object
         self.url = {
             'base_url': base_url,
@@ -58,14 +59,13 @@ class Resource:
         if check['success'] is True and len(check['result']['resources']) > 0:
             return {
                 'exists': True,
-                'items': check['result']['resources'],
+                'resources': check['result']['resources'],
                 'state': check['result']['state']
             }
-
         else:
             return {
                 'exists': False,
-                'items': [],
+                'resources': [],
                 'state': 'Nonexistent'
             }
 
@@ -79,7 +79,7 @@ class Resource:
             headers=self.headers, auth=('dataproject', 'humdata'))
 
         if r.status_code != 200:
-            print("%s failed to create %s" % (item('error'), self.data['name']))
+            print("%s failed to update %s" % (item('error'), self.data['name']))
             print(r.text)
 
         else:
@@ -92,8 +92,8 @@ class Resource:
         '''
         if self.state['exists'] is True:
             print("%s Dataset exists. Updating. %s" % (item('warn'), self.data['name']))
-            for resource in self.state['items']:
-                if resource['name'] == self.data['name']:
+            for resource in self.state['resources']:
+                if self.comparator(resource['name'], self.data['name']):
                     self.data['id'] = resource['id']
                     self.update(resource_package=self.data)
                     return

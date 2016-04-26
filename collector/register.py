@@ -15,7 +15,7 @@ from collector.core.gallery_item import GalleryItem
 from collector.core.resource import Resource
 
 
-def create_datasets(datasets, hdx_site, apikey):
+def create_datasets(datasets, hdx_site, apikey, comparator):
     '''
     Create datasets on an HDX site..
 
@@ -32,13 +32,13 @@ def create_datasets(datasets, hdx_site, apikey):
         raise ValueError('Please provide list of dictionaries.')
 
     for dataset in tqdm(datasets):
-        d = Dataset(dataset_object=dataset, base_url=hdx_site, apikey=apikey)
+        d = Dataset(dataset_object=dataset, base_url=hdx_site, apikey=apikey, comparator=comparator)
         d.create()
 
     print("--------------------------------------------------")
 
 
-def create_resources(resources, hdx_site, apikey):
+def create_resources(resources, hdx_site, apikey, comparator):
     '''
     Create resources based in an HDX site.
 
@@ -55,7 +55,7 @@ def create_resources(resources, hdx_site, apikey):
         raise ValueError('Please provide list of dictionaries.')
 
     for resource in tqdm(resources):
-        r = Resource(resource_object=resource, base_url=hdx_site, apikey=apikey)
+        r = Resource(resource_object=resource, base_url=hdx_site, apikey=apikey, comparator=comparator)
         r.create()
 
     print("--------------------------------------------------")

@@ -14,9 +14,9 @@ from os.path import expanduser
 
 import scraperwiki
 
-from collector.acled_africa import generate_urls
-from collector.parser import parse
-from collector.register import create_datasets, create_resources, create_gallery_items
+from collector.acled_africa import generate_basedata
+from collector.enricher import enrich
+from collector.register import create_datasets, create_gallery_items
 from collector.utilities.item import item as I
 from collector.utilities.load import load_config
 
@@ -32,23 +32,25 @@ def main():
         with open('%s/.hdxkey' % home, 'r') as f:
             apikey = f.read().replace('\n', '')
 
-            p = load_config('config/config.json')
-            if p:
-                objects = generate_urls(p['base_url'], datetime.now())
-                parsed_data = parse(objects)
+            configuration = load_config('config/config.json')
+            if configuration:
+                basedata = generate_basedata(configuration['base_url'], datetime.now())
+                dataset, gallery_item = enrich(basedata)
 
+                hdx_site = configuration['hdx_site']
                 print('--------------------------------------------------')
-                print('%s HDX Site: %s' % (I('bullet'), p['hdx_site']))
+                print('%s HDX Site: %s' % (I('bullet'), hdx_site))
 
                 #
                 # Create datasets, resources, and gallery items.
                 #
-                create_datasets(datasets=parsed_data['datasets'],
-                                hdx_site=p['hdx_site'], apikey=apikey)
-                create_gallery_items(gallery_items=parsed_data['gallery_items'],
-                                     hdx_site=p['hdx_site'], apikey=apikey)
-                create_resources(resources=parsed_data['resources'],
-                                 hdx_site=p['hdx_site'], apikey=apikey)
+                create_datasets(datasets=[dataset], hdx_site=hdx_site, apikey=apikey,
+                                comparator=lambda a, b: all(i[0] == i[1] for i in zip(a, b) if not i[0].isdigit()))
+                #                create_resources(resources=resources, hdx_site=hdx_site, apikey=apikey,
+                #                                 comparator=lambda a, b: all(i[0] == i[1] for i in zip(a, b) if not i[0].isdigit()))
+                create_gallery_items(gallery_items=[gallery_item], hdx_site=hdx_site, apikey=apikey)
+            else:
+                return False
 
     except Exception as e:
         print(e)

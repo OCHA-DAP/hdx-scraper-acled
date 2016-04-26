@@ -8,27 +8,20 @@ Parser of scraper data in to HDX-ready data.
 
 '''
 
-from slugify import slugify
 
-
-def enrich(basedata):
+def enrich_dataset(dataset):
     '''
     This adds HDX required fields to the basic data.
 
     '''
-    title = 'ACLED Conflict Data for %s' % basedata['name']
-    slugified_name = slugify(title).lower()
 
-    dataset = {
-        'name': slugified_name,
-        'title': title,
+    dataset.update({
         'owner_org': 'acled',
         'author': 'acled',
         'author_email': 'c.raleigh@acleddata.com',
         'maintainer': 'acled',
         'maintainer_email': 'c.raleigh@acleddata.com',
         'license_id': 'cc-by-sa',
-        'dataset_date': basedata['dataset_date'],  # has to be MM/DD/YYYY
         'subnational': 1,  # has to be 0 or 1. Default 1 for ACLED.
         'notes': """ACLED conflict and protest data for African states from 1997 – December 2015 is available in Version 6 of the the ACLED dataset. Realtime data for 2016 is collected and published on a weekly basis, and will continue to be made available through the Climate Change and African Political Stability (CCAPS) website and on this page.
 
@@ -45,23 +38,16 @@ Data files are updated each Monday, containing data from the previous week. The 
         'url': None,
         'state': 'active',  # always "active".
         'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}],
-        'groups': basedata['iso']  # has to be ISO-3-letter-code. { 'id': None }
-    }
+    })
+    return dataset
 
-    gallery_item = {
+
+def enrich_gallery_item(gallery_item):
+    gallery_item.update({
         'title': 'Dynamic Map: Political Conflict in Africa',
         'type': 'visualization',
         'description': 'The dynamic maps below have been drawn from ACLED Version 6. They illustrate key dynamics in event types, reported fatalities, and actor categories. Clicking on the maps, and selecting or de-selecting options in the legends, allows users to interactively edit and manipulate the visualisations, and export or share the finished visuals. The maps are visualised using Tableau Public.',
         'url': 'http://www.acleddata.com/visuals/maps/dynamic-maps/',
         'image_url': 'http://docs.hdx.rwlabs.org/wp-content/uploads/acled_visual.png',
-        'dataset_id': slugified_name
-    }
-
-    resources = basedata['resources']
-    for resource in resources:
-        resource['package_id'] = slugified_name
-        resource['name'] = resource['url'].rsplit('/', 1)[-1]
-        resource['description'] = '%s (%s)' % (title, resource['format'])
-
-    dataset['resources'] = resources
-    return dataset, gallery_item
+    })
+    return gallery_item

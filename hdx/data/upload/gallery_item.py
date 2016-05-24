@@ -9,11 +9,11 @@ updating, and checking gallery items.
 
 '''
 import json
+import logging
 
 import requests
 
-from collector.utilities.item import item
-
+logger = logging.getLogger(__name__)
 
 class GalleryItem:
     '''
@@ -39,7 +39,6 @@ class GalleryItem:
             'create': base_url + '/api/3/action/related_create?id=',
             'delete': base_url + '/api/3/action/related_delete?id='
         }
-        headers = {'X-CKAN-API-Key': apikey, 'content-type': 'application/json'}
         self.headers = {
             'X-CKAN-API-Key': apikey,
             'content-type': 'application/json'
@@ -75,11 +74,9 @@ class GalleryItem:
             headers=self.headers, auth=('dataproject', 'humdata'))
 
         if r.status_code != 200:
-            print("%s failed to delete %s" % (item('error'), self.data['dataset_id']))
-            print(r.text)
-
+            logger.error('failed to delete %s\n%s' % (self.data['dataset_id'], r.text))
         else:
-            print("%s deleted successfully %s" % (item('success'), self.data['dataset_id']))
+            logger.info("deleted successfully %s" % self.data['dataset_id'])
 
     def create(self):
         '''
@@ -87,8 +84,8 @@ class GalleryItem:
 
         '''
         if self.state['exists'] is True:
-            print("%s Gallery item exists (%s). Updating. %s" % (
-                item('warn'), len(self.state['items']), self.data['dataset_id']))
+            logger.warning(
+                "Gallery item exists (%s). Updating. %s" % (len(self.state['items']), self.data['dataset_id']))
             for object in self.state['items']:
                 self.delete(gallery_item_data=object)
 
@@ -97,8 +94,6 @@ class GalleryItem:
             headers=self.headers, auth=('dataproject', 'humdata'))
 
         if r.status_code != 200:
-            print("%s failed to create %s" % (item('error'), self.data['dataset_id']))
-            print(r.text)
-
+            logger.error('failed to create %s\n%s' % (self.data['dataset_id'], r.text))
         else:
-            print("%s gallery item created %s" % (item('success'), self.data['dataset_id']))
+            logger.info("gallery item created %s" % self.data['dataset_id'])

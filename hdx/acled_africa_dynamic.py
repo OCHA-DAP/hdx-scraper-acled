@@ -11,10 +11,13 @@ Generates Africa csv and xls from the ACLED website.
 from datetime import timedelta
 
 import geonamescache
+import requests
 from slugify import slugify
 
+from hdx.data.dataset import Dataset
 
-def generate_dataset(base_url, today, iso=None):
+
+def generate_dataset(configuration, today, iso=None):
     '''Parse urls of the form
       CSV: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319_csv.zip
       XLSX: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319.xlsx
@@ -29,9 +32,20 @@ def generate_dataset(base_url, today, iso=None):
     year_to_start_week_url = start_week.strftime('%Y%m%d')
 
     filename = 'ACLED-All-Africa-File_%s-to-%s' % (year_start_url, year_to_start_week_url)
-    url_minus_extension = '%s%s/%s' % (base_url, start_week_url, filename)
+    url_minus_extension = '%s%s/%s' % (configuration['base_url'], start_week_url, filename)
     csv_url = '%s_csv.zip' % url_minus_extension
+    response = requests.head(csv_url)
+    if response.status_code == requests.codes.NOT_FOUND:
+        start_week_url = today.strftime('%Y/%m')
+        url_minus_extension = '%s%s/%s' % (configuration['base_url'], start_week_url, filename)
+        csv_url = '%s_csv.zip' % url_minus_extension
+    response = requests.head(csv_url)
+    if response.status_code == requests.codes.NOT_FOUND:
+        response.raise_for_status()
     xlsx_url = '%s.xlsx' % url_minus_extension
+    response = requests.head(xlsx_url)
+    if response.status_code == requests.codes.NOT_FOUND:
+        response.raise_for_status()
     name = 'Africa (Realtime - %s)' % year
     title = 'ACLED Conflict Data for %s' % name
     slugified_name = slugify(title).lower()
@@ -43,7 +57,7 @@ def generate_dataset(base_url, today, iso=None):
             if country.get('continentcode') == 'AF':
                 iso.append({'id': country.get('iso3').lower()})
 
-    dataset = {}
+    dataset = Dataset(configuration)
     dataset['name'] = slugified_name
     dataset['title'] = title
     dataset['dataset_date'] = dataset_date  # has to be MM/DD/YYYY

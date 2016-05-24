@@ -10,9 +10,9 @@ Registers datasets on HDX.
 
 from tqdm import tqdm
 
-from collector.core.dataset import Dataset
-from collector.core.gallery_item import GalleryItem
-from collector.core.resource import Resource
+from hdx.data.upload.dataset import Dataset
+from hdx.data.upload.gallery_item import GalleryItem
+from hdx.data.upload.resource import Resource
 
 
 def create_datasets(datasets, hdx_site, apikey, comparator):

@@ -9,11 +9,11 @@ checking, and updating datasets.
 
 '''
 import json
+import logging
 
 import requests
 
-from collector.utilities.item import item
-
+logger = logging.getLogger(__name__)
 
 class Dataset:
     '''
@@ -78,11 +78,10 @@ class Dataset:
             headers=self.headers, auth=('dataproject', 'humdata'))
 
         if r.status_code != 200:
-            print("%s failed to update %s" % (item('error'), self.data['name']))
-            print(r.text)
+            logger.error('failed to update %s\n%s' % (self.data['name'], r.text))
 
         else:
-            print("%s updated successfully %s" % (item('success'), self.data['name']))
+            logger.info('updated successfully %s' % self.data['name'])
 
     def create(self):
         '''
@@ -90,7 +89,7 @@ class Dataset:
 
         '''
         if self.state['exists'] is True:
-            print("%s Dataset exists. Updating. %s" % (item('warn'), self.data['name']))
+            logger.warning('Dataset exists. Updating. %s' % self.data['name'])
             for resource in self.state['resources']:
                 if self.comparator(resource['name'], self.data['name']):
                     self.data['id'] = resource['id']
@@ -102,8 +101,6 @@ class Dataset:
             headers=self.headers, auth=('dataproject', 'humdata'))
 
         if r.status_code != 200:
-            print("%s failed to create %s" % (item('error'), self.data['name']))
-            print(r.text)
-
+            logger.error('failed to create %s\n%s' % (self.data['name'], r.text))
         else:
-            print("%s created successfully %s" % (item('success'), self.data['name']))
+            logger.info('created successfully %s' % self.data['name'])

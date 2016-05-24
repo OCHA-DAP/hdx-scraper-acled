@@ -7,7 +7,7 @@ Unit tests for the WorldPop class.
 import unittest
 from datetime import datetime
 
-from collector.acled_africa_dynamic import generate_dataset, generate_gallery_item
+from hdx.acled_africa_dynamic import generate_dataset, generate_gallery_item
 
 
 class TestAcledAfrica(unittest.TestCase):

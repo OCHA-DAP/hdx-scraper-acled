@@ -31,9 +31,12 @@ def generate_dataset(configuration, today, iso=None):
     year_start_url = '%s0101' % year
     year_to_start_week_url = start_week.strftime('%Y%m%d')
 
-    filename = 'ACLED-All-Africa-File_%s-to-%s' % (year_start_url, year_to_start_week_url)
+    filenamestart = 'ACLED-All-Africa-File_%s-to-' % year_start_url
+    filename = '%s%s' % (filenamestart, year_to_start_week_url)
+    resourcename = '%sdate' % filenamestart
     url_minus_extension = '%s%s/%s' % (configuration['base_url'], start_week_url, filename)
     csv_url = '%s_csv.zip' % url_minus_extension
+    csv_resourcename = '%s_csv.zip' % resourcename
     response = requests.head(csv_url)
     if response.status_code == requests.codes.NOT_FOUND:
         start_week_url = today.strftime('%Y/%m')
@@ -43,6 +46,7 @@ def generate_dataset(configuration, today, iso=None):
     if response.status_code == requests.codes.NOT_FOUND:
         response.raise_for_status()
     xlsx_url = '%s.xlsx' % url_minus_extension
+    xlsx_resourcename = '%s.xlsx' % resourcename
     response = requests.head(xlsx_url)
     if response.status_code == requests.codes.NOT_FOUND:
         response.raise_for_status()
@@ -57,29 +61,22 @@ def generate_dataset(configuration, today, iso=None):
             if country.get('continentcode') == 'AF':
                 iso.append({'id': country.get('iso3').lower()})
 
-    dataset = Dataset(configuration)
-    dataset['name'] = slugified_name
-    dataset['title'] = title
-    dataset['dataset_date'] = dataset_date  # has to be MM/DD/YYYY
-    dataset['groups'] = iso
-    dataset['resources'] = []
-    dataset['resources'].append({
+    dataset = Dataset(configuration, {
+        'name': slugified_name,
+        'title': title,
+        'dataset_date': dataset_date,  # has to be MM/DD/YYYY
+        'groups': iso
+    })
+    resources = [{
+        'name': xlsx_resourcename,
         'format': 'xlsx',
         'url': xlsx_url
-    })
-    dataset['resources'].append({
+    }, {
+        'name': csv_resourcename,
         'format': 'zipped csv',
         'url': csv_url
-    })
-    for resource in dataset['resources']:
-        resource['package_id'] = slugified_name
-        resource['name'] = resource['url'].rsplit('/', 1)[-1]
-        resource['description'] = '%s (%s)' % (title, resource['format'])
-
+    }]
+    for resource in resources:
+        resource['description'] = resource['url'].rsplit('/', 1)[-1]
+    dataset.add_resources(resources)
     return dataset
-
-
-def generate_gallery_item(dataset):
-    return {
-        'dataset_id': dataset['name']
-    }

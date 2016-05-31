@@ -8,103 +8,64 @@ Resource item; defines all logic for creating,
 updating, and checking resources.
 
 '''
-import json
 import logging
 
-import requests
-
 from hdx.configuration import Configuration
-from hdx.utilities.loader import load_data_into_existing_dict
+from .hdxobject import HDXObject
 
 logger = logging.getLogger(__name__)
 
 
-class Resource:
+class Resource(HDXObject):
     '''
     Resource class.
 
     '''
+    action_url = {
+        'show': 'resource_show?id=',
+        'update': 'resource_update',
+        'create': 'resource_create'
+    }
 
-    def __init__(self, configuration: Configuration):
-        self.data = dict()
-        base_url = configuration.get_hdx_site()
-        self.url = {
-            'base': base_url,
-            'show': base_url + '/api/action/resource_show?id=',
-            'update': base_url + '/api/3/action/resource_update?id=',
-            'create': base_url + '/api/action/resource_create?id='
-        }
-        self.headers = {
-            'X-CKAN-API-Key': configuration.get_api_key(),
-            'content-type': 'application/json'
-        }
+    def __init__(self, configuration: Configuration, initial_data=None):
+        if not initial_data:
+            initial_data = dict()
+        super(Resource, self).__init__(configuration, self.action_url, initial_data)
 
-    def clear_data(self):
-        self.data = dict()
+    def load_static(self, input_type: str = 'yaml', static_data='config/hdx_resource_static.yml'):
+        self.load(input_type, static_data)
 
-    def add_data(self, input_type: str, input_data):
-        self.data = load_data_into_existing_dict(self.data, input_type, input_data)
-
-    def add_static_data(self, input_type: str = 'yaml', static_data='config/hdx_resource_static.yml'):
-        self.add_data(input_type, static_data)
-
-    def _check(self):
+    def load_from_hdx(self, id) -> bool:
         '''
         Checks if the resource exists in HDX.
 
         '''
-        check = requests.get(
-            self.url['show'] + self.data['name'],
-            headers=self.headers, auth=('dataproject', 'humdata')).json()
 
-        if check['success'] is True and len(check['result']['resources']) > 0:
-            return {
-                'exists': True,
-                'state': check['result']['state']
-            }
-        else:
-            return {
-                'exists': False,
-                'resources': [],
-                'state': 'Nonexistent'
-            }
+        return self._load_from_hdx('resource', id)
 
-    def update(self, state=None):
+    def check_required_fields(self, ignore_fields=list()):
+        self._check_required_fields('resource', ignore_fields)
+
+    def update_in_hdx(self):
         '''
-        Updates a resource on HDX.
+        Updates a resource in HDX.
 
         '''
-        if not state:
-            state = self._check()
+        self._update_in_hdx('resource', 'id')
 
-        for field in self.data:
-            state[field] = self.data[field]
-
-        r = requests.post(
-            self.url['update'], data=json.dumps(state),
-            headers=self.headers, auth=('dataproject', 'humdata'))
-
-        if r.status_code // 100 == 2:
-            logger.info("updated successfully %s" % self.data['name'])
-        else:
-            logger.error('failed to update %s\n%s' % (self.data['name'], r.text))
-
-    def create(self):
+    def create_in_hdx(self):
         '''
-        Creates a resource on HDX.
+        Creates a resource in HDX.
 
         '''
-        state = self._check()
-        if state['exists'] is True:
-            logger.warning("Dataset exists. Updating. %s" % self.data['name'])
-            self.update()
-            return
+        self._create_in_hdx('resource', 'url')
 
-        r = requests.post(
-            self.url['create'], data=json.dumps(self.data),
-            headers=self.headers, auth=('dataproject', 'humdata'))
+    def delete_from_hdx(self):
+        '''
+        Deletes a resource from HDX.
 
-        if r.status_code // 100 == 2:
-            logger.info("created successfully %s" % self.data['name'])
-        else:
-            logger.error('failed to create %s\n%s' % (self.data['name'], r.text))
+        '''
+        self._delete_from_hdx('resource', 'id')
+
+    def create_datastore(self):
+        pass

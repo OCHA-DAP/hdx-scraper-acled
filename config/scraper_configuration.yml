@@ -1,3 +1,2 @@
 # Site specific configuration
 base_url: "http://www.acleddata.com/wp-content/uploads/"
-use_scraperwiki: true

@@ -7,7 +7,7 @@ Unit tests for the WorldPop class.
 import unittest
 from datetime import datetime
 
-from hdx.acled_africa_dynamic import generate_dataset, generate_gallery_item
+from acled_africa import generate_dataset
 
 
 class TestAcledAfrica(unittest.TestCase):
@@ -36,11 +36,6 @@ class TestAcledAfrica(unittest.TestCase):
                            }
 
         actual_result = generate_dataset('http://a.com/', today, "country")
-        self.assertEquals(expected_result, actual_result)
-
-    def test_generate_gallery_item(self):
-        expected_result = {'dataset_id': 'acled-conflict-data-for-africa-realtime-2016'}
-        actual_result = generate_gallery_item({'name': 'acled-conflict-data-for-africa-realtime-2016'})
         self.assertEquals(expected_result, actual_result)
 
     def test_generate_countries(self):

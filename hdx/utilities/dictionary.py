@@ -1,3 +1,5 @@
+import collections
+
 def merge_two_dictionaries(a: dict, b: dict):
     """merges b into a and return merged result
 
@@ -19,9 +21,9 @@ def merge_two_dictionaries(a: dict, b: dict):
             else:
                 # append to list
                 a.append(b)
-        elif isinstance(a, dict):
+        elif isinstance(a, dict) or isinstance(a, collections.UserDict):
             # dicts must be merged
-            if isinstance(b, dict):
+            if isinstance(b, dict) or isinstance(b, collections.UserDict):
                 for key in b:
                     if key in a:
                         a[key] = merge_two_dictionaries(a[key], b[key])

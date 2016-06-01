@@ -12,9 +12,8 @@ from datetime import timedelta
 
 import geonamescache
 import requests
-from slugify import slugify
-
 from hdx.data.dataset import Dataset
+from slugify import slugify
 
 
 def generate_dataset(configuration, today, iso=None):
@@ -78,5 +77,5 @@ def generate_dataset(configuration, today, iso=None):
     }]
     for resource in resources:
         resource['description'] = resource['url'].rsplit('/', 1)[-1]
-    dataset.add_resources(resources)
+    dataset.add_update_resources(resources)
     return dataset

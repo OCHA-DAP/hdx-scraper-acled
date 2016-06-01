@@ -10,7 +10,6 @@ that register datasets in HDX.
 '''
 import logging
 from datetime import datetime
-from os.path import join
 
 from hdx.collector.scraperwiki import wrapper
 
@@ -27,4 +26,4 @@ def main(configuration):
     dataset.create_in_hdx()
 
 if __name__ == '__main__':
-    wrapper(main, scraper_config_yaml=join('config', 'scraper_configuration.yml'))
+    wrapper(main)

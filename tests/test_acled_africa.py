@@ -6,6 +6,7 @@ Unit tests for the WorldPop class.
 '''
 import unittest
 from datetime import datetime
+from os.path import join
 
 from hdx.configuration import Configuration
 
@@ -19,10 +20,10 @@ class TestAcledAfrica(unittest.TestCase):
     '''
 
     def setUp(self):
-        self.configuration = Configuration()
+        self.configuration = Configuration(hdx_key_file=join('fixtures', '.hdxkey'))
 
     def test_generate_dataset(self):
-        today = datetime.strptime('01062016', "%d%m%Y").date()
+        today = datetime.strptime('01062016', '%d%m%Y').date()
         expected_dataset = {'name': 'acled-conflict-data-for-africa-realtime-2016',
                            'title': 'ACLED Conflict Data for Africa (Realtime - 2016)',
                             'dataset_date': '05/28/2016',
@@ -48,9 +49,8 @@ class TestAcledAfrica(unittest.TestCase):
         expected_gallery = []
         self.assertEquals(expected_gallery, actual_dataset.get_gallery())
 
+    def test_generate_countries(self):
+        today = datetime.strptime('01062016', '%d%m%Y').date()
+        actual_result = generate_dataset(self.configuration, today)
 
-def test_generate_countries(self):
-    today = datetime.strptime('01062016', "%d%m%Y").date()
-    actual_result = generate_dataset(self.configuration, today)
-
-    self.assertEquals(58, len(actual_result['groups']))
+        self.assertEquals(58, len(actual_result['groups']))

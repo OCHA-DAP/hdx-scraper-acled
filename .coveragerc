@@ -1,8 +1,9 @@
 [report]
 omit =
+    */run.py
     */python?.?/*
     */venv/*
-    */site-packages/nose/*
+    */site-packages/*
     */tests/*
     *__init__*
 

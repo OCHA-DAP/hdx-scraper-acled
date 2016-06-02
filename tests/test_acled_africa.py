@@ -19,7 +19,7 @@ class TestAcledAfrica():
 
     '''
 
-    @pytest.fixture(scope="session")
+    @pytest.fixture(scope="class")
     def configuration(self):
         return Configuration(hdx_key_file=join('fixtures', '.hdxkey'))
 

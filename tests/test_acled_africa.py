@@ -26,7 +26,7 @@ class TestAcledAfrica():
     def test_generate_dataset(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
         expected_dataset = {'name': 'acled-conflict-data-for-africa-realtime-2016',
-                           'title': 'ACLED Conflict Data for Africa (Realtime - 2016)',
+                            'title': 'ACLED Conflict Data for Africa (Realtime - 2016)',
                             'dataset_date': '05/28/2016',
                             'groups': 'country'
                             }

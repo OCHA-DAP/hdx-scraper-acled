@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
-Unit tests for the WorldPop class.
+Unit tests for the acled_africa class.
 
 '''
 from datetime import datetime
@@ -14,11 +14,6 @@ from acled_africa import generate_dataset
 
 
 class TestAcledAfrica():
-    '''
-    Tests for url generation.
-
-    '''
-
     @pytest.fixture(scope="class")
     def configuration(self):
         return Configuration(hdx_key_file=join('fixtures', '.hdxkey'))

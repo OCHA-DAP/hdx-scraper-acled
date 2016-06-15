@@ -1,3 +1,3 @@
-# Site specific configuration
-hdx_site: "https://test-data.hdx.rwlabs.org/"
+# Collector specific configuration
+hdx_site: "https://test-data.humdata.org/"
 base_url: "https://github.com/mcarans/hdxscraper-acled-africa/blob/0f674693f0542afd5681fa77f8f5077c708c549b/tests/fixtures/"

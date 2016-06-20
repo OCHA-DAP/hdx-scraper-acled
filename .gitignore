@@ -1,18 +1,40 @@
-venv/*
-venv/**
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
-data/*
-data/**
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 
-__pycache__/*
-__pycache__/**
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
 
-.DS_Store
-.coverage
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
 
-*.pyc
-*.rdb
-*.sqlite
-*.sqlite-journal
-
-screenlog.*
+# Sphinx documentation
+documentation/

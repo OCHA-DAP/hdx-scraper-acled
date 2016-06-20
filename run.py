@@ -26,4 +26,4 @@ def main(configuration):
     dataset.create_in_hdx()
 
 if __name__ == '__main__':
-    wrapper(main)
+    wrapper(main, hdx_site='prod')

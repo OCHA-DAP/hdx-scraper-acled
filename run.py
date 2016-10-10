@@ -22,7 +22,7 @@ def main(configuration):
     '''Generate dataset and create it in HDX'''
 
     dataset = generate_dataset(configuration, datetime.now())
-    dataset.update_yaml()
+    dataset.update_from_yaml()
     dataset.create_in_hdx()
 
 if __name__ == '__main__':

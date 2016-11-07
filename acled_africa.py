@@ -53,10 +53,9 @@ def generate_dataset(configuration, today, iso=None):
     title = 'ACLED Conflict Data for %s' % name
     slugified_name = slugify(title).lower()
     gc = geonamescache.GeonamesCache()
-    countries = gc.get_countries()
     if not iso:
         iso = list()
-        for country in countries.values():
+        for country in gc.get_countries().values():
             if country.get('continentcode') == 'AF':
                 iso.append({'id': country.get('iso3').lower()})
 

@@ -22,12 +22,11 @@ def generate_dataset(configuration, today):
       and create basic data for constructing a basedata
     '''
 
-    start_week = today - timedelta(days=(today.weekday() + 2) % 7)
-    dataset_date = start_week.strftime('%m/%d/%Y')  # has to be MM/DD/YYYY
-    start_week_url = start_week.strftime('%Y/%m')
+    dataset_date = today - timedelta(days=(today.weekday() + 2) % 7)
+    start_week_url = dataset_date.strftime('%Y/%m')
     year = start_week_url[:4]
     year_start_url = '%s0101' % year
-    year_to_start_week_url = start_week.strftime('%Y%m%d')
+    year_to_start_week_url = dataset_date.strftime('%Y%m%d')
 
     filenamestart = 'ACLED-All-Africa-File_%s-to-' % year_start_url
     filename = '%s%s' % (filenamestart, year_to_start_week_url)
@@ -55,8 +54,8 @@ def generate_dataset(configuration, today):
     dataset = Dataset(configuration, {
         'name': slugified_name,
         'title': title,
-        'dataset_date': dataset_date,  # has to be MM/DD/YYYY
     })
+    dataset.set_dataset_date_from_datetime(dataset_date)
     dataset.set_expected_update_frequency('Every week')
     dataset.add_continent_location('Africa')
     dataset.add_tags(['conflict', 'political violence', 'protests', 'war'])

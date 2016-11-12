@@ -13,7 +13,6 @@ Due to the realtime nature of data collection which results in occasional report
 
 Data files are updated each Monday, containing data from the previous week. The data files below include a single running file for all 2016 data, with monthly files updated on an ongoing basis."
 caveats: "Due to the realtime nature of data collection which results in occasional reporting lags, and/or insufficient detail in early event reports for inclusion in the dataset, a small number of events in the 2016 data pre-date this period. These have been coded and published for the first time in 2016 and do not duplicate any events found in the full published dataset."
-data_update_frequency: "7"
 methodology: "Other"
 methodology_other: "This page contains information about how the ACLED team collects, cleans, reviews and checks event data, with a focus on what makes ACLED unique and compatible with other data. The process of ACLED coding assures that it is accurate, comprehensive, transparent and regularly updated. ACLED-Africa data is available from 1997 and into real time. ACLED-Asia produces publicly available real-time data and continues to backdate for all states. Data will be posted as it is complete.  For more information about its methodology, please consult [ACLED's Methodology page](http://www.acleddata.com/methodology/)."
 dataset_source: "ACLED"
@@ -21,11 +20,6 @@ package_creator: "mcarans"
 private: False  # has to be True or False
 url: ~
 state: "active"  # always "active".
-tags:
-  - name: "conflict"
-  - name: "political violence"
-  - name: "protests"
-  - name: "war"
 gallery:
   - title: "Dynamic Map: Political Conflict in Africa"
     type: "visualization"

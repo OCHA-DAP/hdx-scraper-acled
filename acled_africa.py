@@ -10,13 +10,12 @@ Generates Africa csv and xls from the ACLED website.
 
 from datetime import timedelta
 
-import geonamescache
 import requests
 from hdx.data.dataset import Dataset
 from slugify import slugify
 
 
-def generate_dataset(configuration, today, iso=None):
+def generate_dataset(configuration, today):
     '''Parse urls of the form
       CSV: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319_csv.zip
       XLSX: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319.xlsx
@@ -52,19 +51,16 @@ def generate_dataset(configuration, today, iso=None):
     name = 'Africa (Realtime - %s)' % year
     title = 'ACLED Conflict Data for %s' % name
     slugified_name = slugify(title).lower()
-    gc = geonamescache.GeonamesCache()
-    if not iso:
-        iso = list()
-        for country in gc.get_countries().values():
-            if country.get('continentcode') == 'AF':
-                iso.append({'id': country.get('iso3').lower()})
 
     dataset = Dataset(configuration, {
         'name': slugified_name,
         'title': title,
         'dataset_date': dataset_date,  # has to be MM/DD/YYYY
-        'groups': iso
     })
+    dataset.set_expected_update_frequency('Every week')
+    dataset.add_continent_location('Africa')
+    dataset.add_tags(['conflict', 'political violence', 'protests', 'war'])
+
     resources = [{
         'name': xlsx_resourcename,
         'format': 'xlsx',

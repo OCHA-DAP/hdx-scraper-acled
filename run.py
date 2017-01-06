@@ -18,12 +18,12 @@ from acled_africa import generate_dataset
 logger = logging.getLogger(__name__)
 
 
-def main(configuration):
+def main():
     '''Generate dataset and create it in HDX'''
 
-    dataset = generate_dataset(configuration, datetime.now())
+    dataset = generate_dataset(datetime.now())
     dataset.update_from_yaml()
     dataset.create_in_hdx()
 
 if __name__ == '__main__':
-    facade(main, hdx_site='test')
+    facade(main, hdx_site='prod')

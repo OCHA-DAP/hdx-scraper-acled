@@ -11,11 +11,12 @@ Generates Africa csv and xls from the ACLED website.
 from datetime import timedelta
 
 import requests
+from hdx.configuration import Configuration
 from hdx.data.dataset import Dataset
 from slugify import slugify
 
 
-def generate_dataset(configuration, today):
+def generate_dataset(today):
     '''Parse urls of the form
       CSV: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319_csv.zip
       XLSX: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319.xlsx
@@ -31,13 +32,13 @@ def generate_dataset(configuration, today):
     filenamestart = 'ACLED-All-Africa-File_%s-to-' % year_start_url
     filename = '%s%s' % (filenamestart, year_to_start_week_url)
     resourcename = '%sdate' % filenamestart
-    url_minus_extension = '%s%s/%s' % (configuration['base_url'], start_week_url, filename)
+    url_minus_extension = '%s%s/%s' % (Configuration.read()['base_url'], start_week_url, filename)
     csv_url = '%s_csv.zip' % url_minus_extension
     csv_resourcename = '%s_csv.zip' % resourcename
     response = requests.head(csv_url)
     if response.status_code == requests.codes.NOT_FOUND:
         start_week_url = today.strftime('%Y/%m')
-        url_minus_extension = '%s%s/%s' % (configuration['base_url'], start_week_url, filename)
+        url_minus_extension = '%s%s/%s' % (Configuration.read()['base_url'], start_week_url, filename)
         csv_url = '%s_csv.zip' % url_minus_extension
     response = requests.head(csv_url)
     if response.status_code == requests.codes.NOT_FOUND:
@@ -51,7 +52,7 @@ def generate_dataset(configuration, today):
     title = 'ACLED Conflict Data for %s' % name
     slugified_name = slugify(title).lower()
 
-    dataset = Dataset(configuration, {
+    dataset = Dataset({
         'name': slugified_name,
         'title': title,
     })

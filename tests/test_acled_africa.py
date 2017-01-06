@@ -14,9 +14,9 @@ from acled_africa import generate_dataset
 
 
 class TestAcledAfrica():
-    @pytest.fixture(scope="class")
+    @pytest.fixture(scope='function')
     def configuration(self):
-        return Configuration(hdx_key_file=join('fixtures', '.hdxkey'))
+        Configuration.create(hdx_key_file=join('fixtures', '.hdxkey'))
 
     def test_generate_dataset(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
@@ -47,10 +47,10 @@ class TestAcledAfrica():
                        {'name': 'uga'}, {'name': 'zaf'}, {'name': 'zmb'}, {'name': 'zwe'}],
         }
 
-        actual_dataset = generate_dataset(configuration, today)
+        actual_dataset = generate_dataset(today)
         assert expected_dataset == actual_dataset
 
-        base_url = configuration['base_url']
+        base_url = Configuration.read()['base_url']
 
         expected_resources = [{
             'description': 'ACLED-All-Africa-File_20160101-to-20160528.xlsx',
@@ -74,6 +74,6 @@ class TestAcledAfrica():
 
     def test_generate_countries(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
-        actual_result = generate_dataset(configuration, today)
+        actual_result = generate_dataset(today)
 
         assert len(actual_result['groups']) == 58

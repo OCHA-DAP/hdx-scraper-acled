@@ -10,6 +10,7 @@ that register datasets in HDX.
 '''
 import logging
 from datetime import datetime
+from os.path import join
 
 from hdx.facades.scraperwiki import facade
 
@@ -26,4 +27,4 @@ def main():
     dataset.create_in_hdx()
 
 if __name__ == '__main__':
-    facade(main, hdx_site='prod')
+    facade(main, hdx_site='test', project_config_yaml=join('config', 'project_configuration.yml'))

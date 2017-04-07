@@ -16,8 +16,8 @@ from acled_africa import generate_dataset
 class TestAcledAfrica():
     @pytest.fixture(scope='function')
     def configuration(self):
-        Configuration.create(hdx_key_file=join('fixtures', '.hdxkey'),
-                             project_config_yaml=join('config', 'project_configuration.yml'))
+        Configuration.create(hdx_key_file=join('tests', 'fixtures', '.hdxkey'),
+                             project_config_yaml=join('tests', 'config', 'project_configuration.yml'))
 
     def test_generate_dataset(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()

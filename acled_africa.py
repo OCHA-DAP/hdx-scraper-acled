@@ -7,7 +7,6 @@ ACLED AFRICA:
 Generates Africa csv and xls from the ACLED website.
 
 '''
-
 from datetime import timedelta
 
 import requests

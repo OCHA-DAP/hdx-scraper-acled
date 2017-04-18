@@ -6,5 +6,5 @@
 # or [sun, mon, tue, wed, thu, fri, or sat]
 #
 # Create crontab using:
-# echo "0 0 * * tue cd tool && bash run.sh > ../log.txt 2>&1" | crontab - 
-0 0 * * tue cd tool && bash run.sh > ../log.txt 2>&1 ../log.txt
+# echo "0 0 * * tue cd hdxscraper-acled-africa && bash run.sh > ../log.txt 2>&1" | crontab -
+0 0 * * tue cd hdxscraper-acled-africa && bash run.sh > ../log.txt 2>&1 ../log.txt

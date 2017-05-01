@@ -35,17 +35,17 @@ def generate_dataset(today):
     csv_url = '%s_csv.zip' % url_minus_extension
     csv_resourcename = '%s_csv.zip' % resourcename
     response = requests.head(csv_url)
-    if response.status_code == requests.codes.NOT_FOUND:
+    if response.status_code != requests.codes.OK:
         start_week_url = today.strftime('%Y/%m')
         url_minus_extension = '%s%s/%s' % (Configuration.read()['base_url'], start_week_url, filename)
         csv_url = '%s_csv.zip' % url_minus_extension
-    response = requests.head(csv_url)
-    if response.status_code == requests.codes.NOT_FOUND:
-        response.raise_for_status()
+        response = requests.head(csv_url)
+        if response.status_code != requests.codes.OK:
+            response.raise_for_status()
     xlsx_url = '%s.xlsx' % url_minus_extension
     xlsx_resourcename = '%s.xlsx' % resourcename
     response = requests.head(xlsx_url)
-    if response.status_code == requests.codes.NOT_FOUND:
+    if response.status_code != requests.codes.OK:
         response.raise_for_status()
     name = 'Africa (Realtime - %s)' % year
     title = 'ACLED Conflict Data for %s' % name

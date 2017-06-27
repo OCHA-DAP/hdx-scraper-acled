@@ -71,8 +71,6 @@ def generate_dataset(today):
     }]
     for resource in resources:
         resource['description'] = resource['url'].rsplit('/', 1)[-1]
-        resource['url_type'] = 'api'
-        resource['resource_type'] = 'api'
 
     dataset.add_update_resources(resources)
     return dataset

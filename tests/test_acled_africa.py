@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
-Unit tests for the acled_africa class.
+Unit tests for acled_africa.
 
 '''
 from datetime import datetime

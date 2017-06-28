@@ -58,15 +58,11 @@ class TestAcledAfrica():
             'name': 'ACLED-All-Africa-File_20160101-to-date.xlsx',
             'url': '%s2016/06/ACLED-All-Africa-File_20160101-to-20160528.xlsx' % base_url,
             'format': 'xlsx',
-            'url_type': 'api',
-            'resource_type': 'api'
         }, {
             'description': 'ACLED-All-Africa-File_20160101-to-20160528_csv.zip',
             'name': 'ACLED-All-Africa-File_20160101-to-date_csv.zip',
             'url': '%s2016/06/ACLED-All-Africa-File_20160101-to-20160528_csv.zip' % base_url,
             'format': 'zipped csv',
-            'url_type': 'api',
-            'resource_type': 'api'
         }]
         assert expected_resources == actual_dataset.get_resources()
 

@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-'''
+"""
 ACLED AFRICA:
 ------------
 
 Generates Africa csv and xls from the ACLED website.
 
-'''
+"""
 from datetime import timedelta
 
 import requests
@@ -16,11 +16,11 @@ from slugify import slugify
 
 
 def generate_dataset(today):
-    '''Parse urls of the form
+    """Parse urls of the form
       CSV: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319_csv.zip
       XLSX: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319.xlsx
       and create basic data for constructing a basedata
-    '''
+    """
 
     dataset_date = today - timedelta(days=(today.weekday() + 2) % 7)
     start_week_url = dataset_date.strftime('%Y/%m')

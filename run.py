@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-'''
+"""
 REGISTER:
 ---------
 
 Caller script. Designed to call all other functions
 that register datasets in HDX.
 
-'''
+"""
 import logging
 from datetime import datetime
 from os.path import join
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    '''Generate dataset and create it in HDX'''
+    """Generate dataset and create it in HDX"""
 
     dataset = generate_dataset(datetime.now())
     dataset.update_from_yaml()
@@ -29,4 +29,4 @@ def main():
         resource.update_datastore()
 
 if __name__ == '__main__':
-    facade(main, hdx_site='prod', project_config_yaml=join('config', 'project_configuration.yml'))
+    facade(main, hdx_site='test', project_config_yaml=join('config', 'project_configuration.yml'))

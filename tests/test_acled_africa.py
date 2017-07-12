@@ -8,9 +8,9 @@ from datetime import datetime
 from os.path import join
 
 import pytest
-from hdx.configuration import Configuration
+from hdx.hdx_configuration import Configuration
 
-from acled_africa import generate_dataset
+from acled_africa import generate_dataset_showcase
 
 
 class TestAcledAfrica():
@@ -19,7 +19,7 @@ class TestAcledAfrica():
         Configuration._create(hdx_key_file=join('tests', 'fixtures', '.hdxkey'),
                              project_config_yaml=join('tests', 'config', 'project_configuration.yml'))
 
-    def test_generate_dataset(self, configuration):
+    def test_generate_dataset_showcase(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
         expected_dataset = {
             'name': 'acled-conflict-data-for-africa-realtime-2016',
@@ -47,9 +47,13 @@ class TestAcledAfrica():
                        {'name': 'tza'},
                        {'name': 'uga'}, {'name': 'zaf'}, {'name': 'zmb'}, {'name': 'zwe'}],
         }
-
-        actual_dataset = generate_dataset(today)
+        expected_showcase = {
+            'name': 'acled-conflict-data-for-africa-realtime-2016-showcase',
+            'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}]
+        }
+        actual_dataset, actual_showcase = generate_dataset_showcase(today)
         assert expected_dataset == actual_dataset
+        assert expected_showcase == actual_showcase
 
         base_url = Configuration.read()['base_url']
 
@@ -66,11 +70,7 @@ class TestAcledAfrica():
         }]
         assert expected_resources == actual_dataset.get_resources()
 
-        expected_gallery = []
-        assert expected_gallery == actual_dataset.get_gallery()
-
     def test_generate_countries(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
-        actual_result = generate_dataset(today)
-
+        actual_result, _ = generate_dataset_showcase(today)
         assert len(actual_result['groups']) == 58

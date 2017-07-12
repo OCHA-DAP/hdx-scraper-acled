@@ -10,7 +10,7 @@ from os.path import join
 
 from hdx.facades.hdx_scraperwiki import facade
 
-from acled_africa import generate_dataset
+from acled_africa import generate_dataset_showcase
 
 logger = logging.getLogger(__name__)
 
@@ -18,11 +18,20 @@ logger = logging.getLogger(__name__)
 def main():
     """Generate dataset and create it in HDX"""
 
-    dataset = generate_dataset(datetime.now())
+    dataset, showcase = generate_dataset_showcase(datetime.now())
     dataset.update_from_yaml()
     dataset.create_in_hdx()
     for resource in dataset.get_resources():
         resource.update_datastore()
+    showcase.update_from_yaml()
+    showcase.create_in_hdx()
+    dataset_found = False
+    for showcase_dataset in showcase.get_datasets():
+        if showcase_dataset['id'] == dataset['id']:
+            dataset_found = True
+            break
+    if not dataset_found:
+        showcase.add_dataset(dataset)
 
 if __name__ == '__main__':
-    facade(main, hdx_site='prod', project_config_yaml=join('config', 'project_configuration.yml'))
+    facade(main, hdx_site='test', project_config_yaml=join('config', 'project_configuration.yml'))

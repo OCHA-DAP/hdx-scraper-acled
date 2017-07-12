@@ -10,12 +10,12 @@ Generates Africa csv and xls from the ACLED website.
 from datetime import timedelta
 
 import requests
-from hdx.configuration import Configuration
 from hdx.data.dataset import Dataset
+from hdx.data.showcase import Showcase
+from hdx.hdx_configuration import Configuration
 from slugify import slugify
 
-
-def generate_dataset(today):
+def generate_dataset_showcase(today):
     """Parse urls of the form
       CSV: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319_csv.zip
       XLSX: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319.xlsx
@@ -73,4 +73,9 @@ def generate_dataset(today):
         resource['description'] = resource['url'].rsplit('/', 1)[-1]
 
     dataset.add_update_resources(resources)
-    return dataset
+
+    showcase = Showcase({
+        'name': '%s-showcase' % slugified_name
+    })
+    showcase.add_tags(['conflict', 'political violence', 'protests', 'war'])
+    return dataset, showcase

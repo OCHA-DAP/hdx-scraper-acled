@@ -25,13 +25,7 @@ def main():
         resource.update_datastore()
     showcase.update_from_yaml()
     showcase.create_in_hdx()
-    dataset_found = False
-    for showcase_dataset in showcase.get_datasets():
-        if showcase_dataset['id'] == dataset['id']:
-            dataset_found = True
-            break
-    if not dataset_found:
-        showcase.add_dataset(dataset)
+    showcase.add_dataset(dataset)
 
 if __name__ == '__main__':
     facade(main, hdx_site='test', project_config_yaml=join('config', 'project_configuration.yml'))

@@ -21,7 +21,8 @@ class TestAcledAfrica():
 
     def test_generate_dataset_showcase(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
-        expected_dataset = {
+        dataset, showcase = generate_dataset_showcase(today)
+        assert dataset == {
             'name': 'acled-conflict-data-for-africa-realtime-2016',
             'title': 'ACLED Conflict Data for Africa (Realtime - 2016)',
             'dataset_date': '05/28/2016',
@@ -47,25 +48,9 @@ class TestAcledAfrica():
                        {'name': 'tza'},
                        {'name': 'uga'}, {'name': 'zaf'}, {'name': 'zmb'}, {'name': 'zwe'}],
         }
-        expected_resources = [{'format': 'xlsx', 'url': 'https://github.com/mcarans/hdxscraper-acled-africa/raw/0f674693f0542afd5681fa77f8f5077c708c549b/tests/fixtures/2016/06/ACLED-All-Africa-File_20160101-to-20160528.xlsx',
-                               'description': 'ACLED-All-Africa-File_20160101-to-20160528.xlsx',
-                               'name': 'ACLED-All-Africa-File_20160101-to-date.xlsx'},
-                              {'format': 'zipped csv', 'url': 'https://github.com/mcarans/hdxscraper-acled-africa/raw/0f674693f0542afd5681fa77f8f5077c708c549b/tests/fixtures/2016/06/ACLED-All-Africa-File_20160101-to-20160528_csv.zip',
-                               'description': 'ACLED-All-Africa-File_20160101-to-20160528_csv.zip',
-                               'name': 'ACLED-All-Africa-File_20160101-to-date_csv.zip'}]
-        expected_showcase = {
-            'name': 'acled-conflict-data-for-africa-realtime-2016-showcase',
-            'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}]
-        }
-        actual_dataset, actual_showcase = generate_dataset_showcase(today)
-        assert actual_dataset == expected_dataset
-        actual_resources = actual_dataset.get_resources()
-        assert actual_resources == expected_resources
-        assert actual_showcase == expected_showcase
-
+        resources = dataset.get_resources()
         base_url = Configuration.read()['base_url']
-
-        expected_resources = [{
+        assert resources == [{
             'description': 'ACLED-All-Africa-File_20160101-to-20160528.xlsx',
             'name': 'ACLED-All-Africa-File_20160101-to-date.xlsx',
             'url': '%s2016/06/ACLED-All-Africa-File_20160101-to-20160528.xlsx' % base_url,
@@ -76,7 +61,10 @@ class TestAcledAfrica():
             'url': '%s2016/06/ACLED-All-Africa-File_20160101-to-20160528_csv.zip' % base_url,
             'format': 'zipped csv',
         }]
-        assert expected_resources == actual_dataset.get_resources()
+        assert showcase == {
+            'name': 'acled-conflict-data-for-africa-realtime-2016-showcase',
+            'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}]
+        }
 
     def test_generate_countries(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()

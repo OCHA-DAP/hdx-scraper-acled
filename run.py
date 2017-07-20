@@ -8,10 +8,9 @@ import logging
 from datetime import datetime
 from os.path import join
 
-from hdx.facades import logging_kwargs
-
 from acled_africa import generate_dataset_showcase
 
+from hdx.facades import logging_kwargs
 logging_kwargs['smtp_config_yaml'] = join('config', 'smtp_configuration.yml')
 from hdx.facades.hdx_scraperwiki import facade
 

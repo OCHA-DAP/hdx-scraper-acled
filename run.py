@@ -8,9 +8,12 @@ import logging
 from datetime import datetime
 from os.path import join
 
-from hdx.facades.hdx_scraperwiki import facade
+from hdx.facades import logging_kwargs
 
 from acled_africa import generate_dataset_showcase
+
+logging_kwargs['smtp_config_yaml'] = join('config', 'smtp_configuration.yml')
+from hdx.facades.hdx_scraperwiki import facade
 
 logger = logging.getLogger(__name__)
 
@@ -28,5 +31,4 @@ def main():
     showcase.add_dataset(dataset)
 
 if __name__ == '__main__':
-    facade(main, hdx_site='test', project_config_yaml=join('config', 'project_configuration.yml'),
-           smtp_config_yaml=join('config', 'smtp_configuration.yml'))
+    facade(main, hdx_site='test', project_config_yaml=join('config', 'project_configuration.yml'))

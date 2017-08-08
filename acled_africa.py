@@ -78,4 +78,4 @@ def generate_dataset_showcase(today):
         'name': '%s-showcase' % slugified_name
     })
     showcase.add_tags(['conflict', 'political violence', 'protests', 'war'])
-    return dataset, showcase
+    return dataset, showcase, xlsx_url

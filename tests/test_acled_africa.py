@@ -21,7 +21,7 @@ class TestAcledAfrica():
 
     def test_generate_dataset_showcase(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
-        dataset, showcase = generate_dataset_showcase(today)
+        dataset, showcase, xlsx_url = generate_dataset_showcase(today)
         assert dataset == {
             'name': 'acled-conflict-data-for-africa-realtime-2016',
             'title': 'ACLED Conflict Data for Africa (Realtime - 2016)',
@@ -50,10 +50,11 @@ class TestAcledAfrica():
         }
         resources = dataset.get_resources()
         base_url = Configuration.read()['base_url']
+        xlsx_url_expected = '%s2016/06/ACLED-All-Africa-File_20160101-to-20160528.xlsx' % base_url
         assert resources == [{
             'description': 'ACLED-All-Africa-File_20160101-to-20160528.xlsx',
             'name': 'ACLED-All-Africa-File_20160101-to-date.xlsx',
-            'url': '%s2016/06/ACLED-All-Africa-File_20160101-to-20160528.xlsx' % base_url,
+            'url': xlsx_url_expected,
             'format': 'xlsx',
         }, {
             'description': 'ACLED-All-Africa-File_20160101-to-20160528_csv.zip',
@@ -65,8 +66,9 @@ class TestAcledAfrica():
             'name': 'acled-conflict-data-for-africa-realtime-2016-showcase',
             'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}]
         }
+        assert xlsx_url == xlsx_url_expected
 
     def test_generate_countries(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
-        actual_result, _ = generate_dataset_showcase(today)
+        actual_result, _, _ = generate_dataset_showcase(today)
         assert len(actual_result['groups']) == 58

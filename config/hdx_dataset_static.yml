@@ -1,7 +1,6 @@
 owner_org: "acled"
 author: "acled"
 author_email: "info.africa@acleddata.com"
-maintainer: "acled"
 maintainer_email: "info.africa@acleddata.com"
 license_id: "cc-by-sa"
 subnational: 1  # has to be 0 or 1. Default 1 for ACLED.

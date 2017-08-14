@@ -9,7 +9,6 @@ from datetime import datetime
 from os import unlink
 from os.path import join
 
-from hdx.data.user import User
 from hdx.utilities.downloader import Download
 
 from acled_africa import generate_dataset_showcase
@@ -24,7 +23,7 @@ logger = logging.getLogger(__name__)
 def main():
     """Generate dataset and create it in HDX"""
 
-    dataset, showcase, xlsx_url = generate_dataset_showcase(datetime.now(), User.read_from_hdx('acled'))
+    dataset, showcase, xlsx_url = generate_dataset_showcase(datetime.now())
     dataset.update_from_yaml()
     dataset.create_in_hdx()
     downloader = Download()

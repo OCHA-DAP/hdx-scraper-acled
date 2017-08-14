@@ -15,24 +15,17 @@ from acled_africa import generate_dataset_showcase
 
 
 class TestAcledAfrica():
-    maintainer_id = '8b84230c-e04a-43ec-99e5-41307a203a2f'
-
     @pytest.fixture(scope='function')
     def configuration(self):
         Configuration._create(hdx_key_file=join('tests', 'fixtures', '.hdxkey'),
                              project_config_yaml=join('tests', 'config', 'project_configuration.yml'))
 
-    @pytest.fixture(scope='class')
-    def maintainer(self):
-        return User({'id': TestAcledAfrica.maintainer_id})
-
-    def test_generate_dataset_showcase(self, configuration, maintainer):
+    def test_generate_dataset_showcase(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
-        dataset, showcase, xlsx_url = generate_dataset_showcase(today, maintainer=maintainer)
+        dataset, showcase, xlsx_url = generate_dataset_showcase(today)
         assert dataset == {
             'name': 'acled-conflict-data-for-africa-realtime-2016',
             'title': 'ACLED Conflict Data for Africa (Realtime - 2016)',
-            'maintainer': TestAcledAfrica.maintainer_id,
             'dataset_date': '05/28/2016',
             'data_update_frequency': '7',
             'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}],
@@ -76,7 +69,7 @@ class TestAcledAfrica():
         }
         assert xlsx_url == xlsx_url_expected
 
-    def test_generate_countries(self, configuration, maintainer):
+    def test_generate_countries(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
-        actual_result, _, _ = generate_dataset_showcase(today, maintainer=maintainer)
+        actual_result, _, _ = generate_dataset_showcase(today)
         assert len(actual_result['groups']) == 58

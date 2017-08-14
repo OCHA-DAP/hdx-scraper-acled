@@ -15,7 +15,7 @@ from hdx.data.showcase import Showcase
 from hdx.hdx_configuration import Configuration
 from slugify import slugify
 
-def generate_dataset_showcase(today, maintainer):
+def generate_dataset_showcase(today):
     """Parse urls of the form
       CSV: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319_csv.zip
       XLSX: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319.xlsx
@@ -55,7 +55,6 @@ def generate_dataset_showcase(today, maintainer):
         'name': slugified_name,
         'title': title,
     })
-    dataset.set_maintainer(maintainer)
     dataset.set_dataset_date_from_datetime(dataset_date)
     dataset.set_expected_update_frequency('Every week')
     dataset.add_continent_location('Africa')

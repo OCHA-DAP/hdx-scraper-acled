@@ -28,6 +28,8 @@ class TestAcledAfrica():
             'title': 'ACLED Conflict Data for Africa (Realtime - 2016)',
             'dataset_date': '05/28/2016',
             'data_update_frequency': '7',
+            'maintainer': '8b84230c-e04a-43ec-99e5-41307a203a2f',
+            'owner_org': 'b67e6c74-c185-4f43-b561-0e114a736f19',
             'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}],
             'groups': [{'name': 'ago'}, {'name': 'bdi'}, {'name': 'ben'}, {'name': 'bfa'}, {'name': 'bwa'},
                        {'name': 'caf'},

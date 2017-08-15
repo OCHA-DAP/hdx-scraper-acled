@@ -5,7 +5,7 @@ Top level script. Calls other functions that generate datasets that this script 
 
 """
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from os import unlink
 from os.path import join
 
@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 def main():
     """Generate dataset and create it in HDX"""
 
-    dataset, showcase, xlsx_url = generate_dataset_showcase(datetime.now())
+    today = datetime.now() - timedelta(days=6)
+    dataset, showcase, xlsx_url = generate_dataset_showcase(today)
     dataset.update_from_yaml()
     dataset.create_in_hdx()
     downloader = Download()

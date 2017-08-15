@@ -1,8 +1,3 @@
-owner_org: "acled"
-author: "acled"
-author_email: "info.africa@acleddata.com"
-maintainer: "8b84230c-e04a-43ec-99e5-41307a203a2f"
-maintainer_email: "info.africa@acleddata.com"
 license_id: "cc-by-sa"
 subnational: 1  # has to be 0 or 1. Default 1 for ACLED.
 notes: "ACLED conflict and protest data for African states from 1997 – December 2016 is available in Version 7 of the the ACLED dataset. Realtime data for 2017 is collected and published on a weekly basis, and will continue to be made available through the Climate Change and African Political Stability (CCAPS) website and on this page.

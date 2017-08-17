@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 def main():
     """Generate dataset and create it in HDX"""
 
-    today = datetime.now() # - timedelta(days=6)
+    today = datetime.now()  # - timedelta(days=6)
     dataset, showcase, xlsx_url = generate_dataset_showcase(today)
     dataset.update_from_yaml()
     dataset.create_in_hdx()

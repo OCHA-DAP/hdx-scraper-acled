@@ -15,6 +15,7 @@ from hdx.data.showcase import Showcase
 from hdx.hdx_configuration import Configuration
 from slugify import slugify
 
+
 def generate_dataset_showcase(today):
     """Parse urls of the form
       CSV: http://www.acleddata.com/wp-content/uploads/2016/03/ACLED-All-Africa-File_20160101-to-20160319_csv.zip
@@ -48,8 +49,8 @@ def generate_dataset_showcase(today):
     if response.status_code != requests.codes.OK:
         response.raise_for_status()
     name = 'Africa (Realtime - %s)' % year
-    title = 'ACLED Conflict Data for %s' % name
-    slugified_name = slugify(title).lower()
+    title = 'Africa - Conflict Data'
+    slugified_name = slugify('ACLED Conflict Data for %s' % name).lower()
 
     dataset = Dataset({
         'name': slugified_name,

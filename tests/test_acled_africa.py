@@ -25,7 +25,7 @@ class TestAcledAfrica():
         dataset, showcase, xlsx_url = generate_dataset_showcase(today)
         assert dataset == {
             'name': 'acled-conflict-data-for-africa-realtime-2016',
-            'title': 'ACLED Conflict Data for Africa (Realtime - 2016)',
+            'title': 'Africa - Conflict Data',
             'dataset_date': '05/28/2016',
             'data_update_frequency': '7',
             'maintainer': '8b84230c-e04a-43ec-99e5-41307a203a2f',

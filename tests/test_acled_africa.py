@@ -10,17 +10,32 @@ from os.path import join
 import pytest
 from hdx.data.user import User
 from hdx.hdx_configuration import Configuration
+from hdx.hdx_locations import Locations
 
 from acled_africa import generate_dataset_showcase
 
 
 class TestAcledAfrica():
     @pytest.fixture(scope='function')
-    def configuration(self):
-        Configuration._create(hdx_key_file=join('tests', 'fixtures', '.hdxkey'),
-                             project_config_yaml=join('tests', 'config', 'project_configuration.yml'))
+    def africa(self):
+        return [{'name': 'ago'}, {'name': 'bdi'}, {'name': 'ben'}, {'name': 'bfa'}, {'name': 'bwa'}, {'name': 'caf'},
+                {'name': 'civ'}, {'name': 'cmr'}, {'name': 'cod'}, {'name': 'cog'}, {'name': 'com'}, {'name': 'cpv'},
+                {'name': 'dji'}, {'name': 'dza'}, {'name': 'egy'}, {'name': 'eri'}, {'name': 'esh'}, {'name': 'eth'},
+                {'name': 'gab'}, {'name': 'gha'}, {'name': 'gin'}, {'name': 'gmb'}, {'name': 'gnb'}, {'name': 'gnq'},
+                {'name': 'ken'}, {'name': 'lbr'}, {'name': 'lby'}, {'name': 'lso'}, {'name': 'mar'}, {'name': 'mdg'},
+                {'name': 'mli'}, {'name': 'moz'}, {'name': 'mrt'}, {'name': 'mus'}, {'name': 'mwi'}, {'name': 'myt'},
+                {'name': 'nam'}, {'name': 'ner'}, {'name': 'nga'}, {'name': 'reu'}, {'name': 'rwa'}, {'name': 'sdn'},
+                {'name': 'sen'}, {'name': 'shn'}, {'name': 'sle'}, {'name': 'som'}, {'name': 'ssd'}, {'name': 'stp'},
+                {'name': 'swz'}, {'name': 'syc'}, {'name': 'tcd'}, {'name': 'tgo'}, {'name': 'tun'}, {'name': 'tza'},
+                {'name': 'uga'}, {'name': 'zaf'}, {'name': 'zmb'}, {'name': 'zwe'}]
 
-    def test_generate_dataset_showcase(self, configuration):
+    @pytest.fixture(scope='function')
+    def configuration(self, africa):
+        Configuration._create(hdx_key_file=join('tests', 'fixtures', '.hdxkey'),
+                              project_config_yaml=join('tests', 'config', 'project_configuration.yml'))
+        Locations.set_validlocations(africa)
+
+    def test_generate_dataset_showcase(self, configuration, africa):
         today = datetime.strptime('01062016', '%d%m%Y').date()
         dataset, showcase, xlsx_url = generate_dataset_showcase(today)
         assert dataset == {
@@ -31,25 +46,7 @@ class TestAcledAfrica():
             'maintainer': '8b84230c-e04a-43ec-99e5-41307a203a2f',
             'owner_org': 'b67e6c74-c185-4f43-b561-0e114a736f19',
             'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}],
-            'groups': [{'name': 'ago'}, {'name': 'bdi'}, {'name': 'ben'}, {'name': 'bfa'}, {'name': 'bwa'},
-                       {'name': 'caf'},
-                       {'name': 'civ'}, {'name': 'cmr'}, {'name': 'cod'}, {'name': 'cog'}, {'name': 'com'},
-                       {'name': 'cpv'},
-                       {'name': 'dji'}, {'name': 'dza'}, {'name': 'egy'}, {'name': 'eri'}, {'name': 'esh'},
-                       {'name': 'eth'},
-                       {'name': 'gab'}, {'name': 'gha'}, {'name': 'gin'}, {'name': 'gmb'}, {'name': 'gnb'},
-                       {'name': 'gnq'},
-                       {'name': 'ken'}, {'name': 'lbr'}, {'name': 'lby'}, {'name': 'lso'}, {'name': 'mar'},
-                       {'name': 'mdg'},
-                       {'name': 'mli'}, {'name': 'moz'}, {'name': 'mrt'}, {'name': 'mus'}, {'name': 'mwi'},
-                       {'name': 'myt'},
-                       {'name': 'nam'}, {'name': 'ner'}, {'name': 'nga'}, {'name': 'reu'}, {'name': 'rwa'},
-                       {'name': 'sdn'},
-                       {'name': 'sen'}, {'name': 'shn'}, {'name': 'sle'}, {'name': 'som'}, {'name': 'ssd'},
-                       {'name': 'stp'},
-                       {'name': 'swz'}, {'name': 'syc'}, {'name': 'tcd'}, {'name': 'tgo'}, {'name': 'tun'},
-                       {'name': 'tza'},
-                       {'name': 'uga'}, {'name': 'zaf'}, {'name': 'zmb'}, {'name': 'zwe'}],
+            'groups': africa,
         }
         resources = dataset.get_resources()
         base_url = Configuration.read()['base_url']

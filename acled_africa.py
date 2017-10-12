@@ -60,7 +60,8 @@ def generate_dataset_showcase(today):
     dataset.set_organization('b67e6c74-c185-4f43-b561-0e114a736f19')
     dataset.set_dataset_date_from_datetime(dataset_date)
     dataset.set_expected_update_frequency('Every week')
-    dataset.add_continent_location('Africa')
+    dataset.add_region_location('MEA')
+    dataset.add_region_location('SSF')
     dataset.add_tags(['conflict', 'political violence', 'protests', 'war'])
 
     resources = [{

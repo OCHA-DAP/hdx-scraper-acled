@@ -8,9 +8,9 @@ from datetime import datetime
 from os.path import join
 
 import pytest
-from hdx.data.user import User
 from hdx.hdx_configuration import Configuration
 from hdx.hdx_locations import Locations
+from hdx.location.country import Country
 
 from acled_africa import generate_dataset_showcase
 
@@ -18,22 +18,23 @@ from acled_africa import generate_dataset_showcase
 class TestAcledAfrica():
     @pytest.fixture(scope='function')
     def africa(self):
-        return [{'name': 'ago'}, {'name': 'bdi'}, {'name': 'ben'}, {'name': 'bfa'}, {'name': 'bwa'}, {'name': 'caf'},
-                {'name': 'civ'}, {'name': 'cmr'}, {'name': 'cod'}, {'name': 'cog'}, {'name': 'com'}, {'name': 'cpv'},
-                {'name': 'dji'}, {'name': 'dza'}, {'name': 'egy'}, {'name': 'eri'}, {'name': 'esh'}, {'name': 'eth'},
-                {'name': 'gab'}, {'name': 'gha'}, {'name': 'gin'}, {'name': 'gmb'}, {'name': 'gnb'}, {'name': 'gnq'},
-                {'name': 'ken'}, {'name': 'lbr'}, {'name': 'lby'}, {'name': 'lso'}, {'name': 'mar'}, {'name': 'mdg'},
-                {'name': 'mli'}, {'name': 'moz'}, {'name': 'mrt'}, {'name': 'mus'}, {'name': 'mwi'}, {'name': 'myt'},
-                {'name': 'nam'}, {'name': 'ner'}, {'name': 'nga'}, {'name': 'reu'}, {'name': 'rwa'}, {'name': 'sdn'},
-                {'name': 'sen'}, {'name': 'shn'}, {'name': 'sle'}, {'name': 'som'}, {'name': 'ssd'}, {'name': 'stp'},
-                {'name': 'swz'}, {'name': 'syc'}, {'name': 'tcd'}, {'name': 'tgo'}, {'name': 'tun'}, {'name': 'tza'},
-                {'name': 'uga'}, {'name': 'zaf'}, {'name': 'zmb'}, {'name': 'zwe'}]
+        return [{'name': 'ago'}, {'name': 'atf'}, {'name': 'bdi'}, {'name': 'ben'}, {'name': 'bfa'}, {'name': 'bwa'},
+                {'name': 'caf'}, {'name': 'civ'}, {'name': 'cmr'}, {'name': 'cod'}, {'name': 'cog'}, {'name': 'com'},
+                {'name': 'cpv'}, {'name': 'dji'}, {'name': 'dza'}, {'name': 'egy'}, {'name': 'eri'}, {'name': 'esh'},
+                {'name': 'eth'}, {'name': 'gab'}, {'name': 'gha'}, {'name': 'gin'}, {'name': 'gmb'}, {'name': 'gnb'},
+                {'name': 'gnq'}, {'name': 'iot'}, {'name': 'ken'}, {'name': 'lbr'}, {'name': 'lby'}, {'name': 'lso'},
+                {'name': 'mar'}, {'name': 'mdg'}, {'name': 'mli'}, {'name': 'moz'}, {'name': 'mrt'}, {'name': 'mus'},
+                {'name': 'mwi'}, {'name': 'myt'}, {'name': 'nam'}, {'name': 'ner'}, {'name': 'nga'}, {'name': 'reu'},
+                {'name': 'rwa'}, {'name': 'sdn'}, {'name': 'sen'}, {'name': 'shn'}, {'name': 'sle'}, {'name': 'som'},
+                {'name': 'ssd'}, {'name': 'stp'}, {'name': 'swz'}, {'name': 'syc'}, {'name': 'tcd'}, {'name': 'tgo'},
+                {'name': 'tun'}, {'name': 'tza'}, {'name': 'uga'}, {'name': 'zaf'}, {'name': 'zmb'}, {'name': 'zwe'}]
 
     @pytest.fixture(scope='function')
     def configuration(self, africa):
         Configuration._create(hdx_key_file=join('tests', 'fixtures', '.hdxkey'),
                               project_config_yaml=join('tests', 'config', 'project_configuration.yml'))
         Locations.set_validlocations(africa)
+        Country.countriesdata(use_live=False)
 
     def test_generate_dataset_showcase(self, configuration, africa):
         today = datetime.strptime('01062016', '%d%m%Y').date()
@@ -71,4 +72,4 @@ class TestAcledAfrica():
     def test_generate_countries(self, configuration):
         today = datetime.strptime('01062016', '%d%m%Y').date()
         actual_result, _, _ = generate_dataset_showcase(today)
-        assert len(actual_result['groups']) == 58
+        assert len(actual_result['groups']) == 60

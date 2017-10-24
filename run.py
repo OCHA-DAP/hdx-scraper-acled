@@ -27,8 +27,8 @@ def main():
     dataset, showcase, xlsx_url = generate_dataset_showcase(today)
     dataset.update_from_yaml()
     dataset.create_in_hdx()
-    downloader = Download()
-    path = downloader.download_file(xlsx_url)
+    with Download() as downloader:
+        path = downloader.download_file(xlsx_url)
     for resource in dataset.get_resources():
         resource.update_datastore(path=path)
     unlink(path)

@@ -48,7 +48,7 @@ def generate_dataset_showcase(today):
     response = requests.head(xlsx_url)
     if response.status_code != requests.codes.OK:
         response.raise_for_status()
-    name = 'Africa (Realtime - %s)' % year
+    name = 'Africa (Realtime)'
     title = 'Africa - Conflict Data'
     slugified_name = slugify('ACLED Conflict Data for %s' % name).lower()
 

@@ -40,7 +40,7 @@ class TestAcledAfrica():
         today = datetime.strptime('01062016', '%d%m%Y').date()
         dataset, showcase, xlsx_url = generate_dataset_showcase(today)
         assert dataset == {
-            'name': 'acled-conflict-data-for-africa-realtime-2016',
+            'name': 'acled-conflict-data-for-africa-realtime',
             'title': 'Africa - Conflict Data',
             'dataset_date': '05/28/2016',
             'data_update_frequency': '7',
@@ -64,7 +64,7 @@ class TestAcledAfrica():
             'format': 'zipped csv',
         }]
         assert showcase == {
-            'name': 'acled-conflict-data-for-africa-realtime-2016-showcase',
+            'name': 'acled-conflict-data-for-africa-realtime-showcase',
             'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}]
         }
         assert xlsx_url == xlsx_url_expected

@@ -1,2 +1,2 @@
 # Collector specific configuration
-base_url: "https://github.com/mcarans/hdxscraper-acled-africa/raw/0f674693f0542afd5681fa77f8f5077c708c549b/tests/fixtures/"
+acled_url: "https://github.com/mcarans/hdxscraper-acled-africa/raw/0f674693f0542afd5681fa77f8f5077c708c549b/tests/fixtures/"

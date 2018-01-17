@@ -5,16 +5,16 @@ Top level script. Calls other functions that generate datasets that this script 
 
 """
 import logging
-from datetime import datetime, timedelta
-from os import unlink
 from os.path import join
 
+from hdx.hdx_configuration import Configuration
 from hdx.utilities.downloader import Download
 
-from acled_africa import generate_dataset_showcase
+from acled import get_countriesdata, generate_dataset_and_showcase
 
 from hdx.facades import logging_kwargs
 logging_kwargs['smtp_config_yaml'] = join('config', 'smtp_configuration.yml')
+
 from hdx.facades.hdx_scraperwiki import facade
 
 logger = logging.getLogger(__name__)
@@ -23,18 +23,20 @@ logger = logging.getLogger(__name__)
 def main():
     """Generate dataset and create it in HDX"""
 
-    today = datetime.now()  # - timedelta(days=6)
-    dataset, showcase, xlsx_url = generate_dataset_showcase(today)
-    dataset.update_from_yaml()
-    dataset.create_in_hdx()
+    acled_url = Configuration.read()['acled_url']
+    countries_url = Configuration.read()['countries_url']
+    hxlproxy_url = Configuration.read()['hxlproxy_url']
     with Download() as downloader:
-        path = downloader.download_file(xlsx_url)
-    for resource in dataset.get_resources():
-        resource.update_datastore(path=path)
-    unlink(path)
-    showcase.update_from_yaml()
-    showcase.create_in_hdx()
-    showcase.add_dataset(dataset)
+        countriesdata = get_countriesdata(countries_url, downloader)
+        logger.info('Number of datasets to upload: %d' % len(countriesdata))
+
+        for countrydata in sorted(countriesdata, key=lambda x: x['iso3']):
+            dataset, showcase = generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countrydata)
+            if dataset:
+                dataset.update_from_yaml()
+                dataset.create_in_hdx()
+                showcase.create_in_hdx()
+                showcase.add_dataset(dataset)
 
 
 if __name__ == '__main__':

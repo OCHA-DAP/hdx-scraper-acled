@@ -1,9 +1,9 @@
-Collector for ACLED’s Africa Datasets
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Collector for ACLED’s Datasets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 |Build Status| |Coverage Status|
 
-Collector designed to collect the Africa datasets from the `ACLED`_
+Collector designed to collect the conflict datasets from the `ACLED`_
 website.
 
 Usage

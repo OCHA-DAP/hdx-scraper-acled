@@ -63,6 +63,10 @@ def generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countryda
         if year > latest_year:
             latest_year = year
 
+    if latest_year == 0:
+        logger.exception('%s has no data!' % countryname)
+        return None, None
+
     resource = {
         'name': 'Conflict Data for %s' % countryname,
         'description': 'Conflict data with HXL tags',

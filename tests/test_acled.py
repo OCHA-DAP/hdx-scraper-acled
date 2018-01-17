@@ -16,13 +16,13 @@ from acled import generate_dataset_and_showcase, get_countriesdata
 
 
 class TestAcledAfrica():
-    countrydata = {'m49': 4, 'iso3': 'AFG', 'countryname': 'Afghanistan'}
+    countrydata = {'m49': 120, 'iso3': 'CMR', 'countryname': 'Cameroon'}
 
     @pytest.fixture(scope='function')
-    def configuration(self, africa):
+    def configuration(self):
         Configuration._create(hdx_key_file=join('tests', 'fixtures', '.hdxkey'),
                               project_config_yaml=join('tests', 'config', 'project_configuration.yml'))
-        Locations.set_validlocations(africa)
+        Locations.set_validlocations([{'name': 'afg', 'title': 'Afghanistan'}, {'name': 'cmr', 'title': 'Cameroon'}])
         Country.countriesdata(use_live=False)
 
     @pytest.fixture(scope='function')
@@ -53,8 +53,12 @@ class TestAcledAfrica():
             @staticmethod
             def get_tabular_rows(url, dict_rows, headers):
                 if url == 'http://haha':
-                    return [{'End Date': 'Real Time Coding', 'Updated and Backdated': None, 'Country': 'Afghanistan',
-                             'Start Date': datetime.datetime(2017, 1, 1, 0, 0), 'Region': 'Southern Asia'}]
+                    return [{'End Date': 'Real Time Coding', 'Updated and Backdated': None, 'Country': 'Cameroon',
+                             'Start Date': datetime.datetime(1997, 1, 1, 0, 0), 'Region': 'Middle Africa'}]
+                elif url == 'http://lala?iso=120':
+                    return [{'year': '1997'}, {'year': '2018'}]
+                elif url == 'http://lala?iso=4':
+                    return list()
 
         return Download()
 
@@ -63,21 +67,21 @@ class TestAcledAfrica():
         assert countriesdata == [TestAcledAfrica.countrydata]
 
     def test_generate_dataset_and_showcase(self, configuration, downloader):
-        acled_url = Configuration.read()['acled_url']
         hxlproxy_url = Configuration.read()['hxlproxy_url']
-        dataset, showcase = generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, TestAcledAfrica.countrydata)
-        assert dataset == {'groups': [{'name': 'afg'}], 'title': 'Afghanistan - Health Indicators',
-                           'tags': [{'name': 'indicators'}, {'name': 'World Health Organization'}],
-                           'data_update_frequency': '365', 'dataset_date': '01/01/1992-12/31/2015',
-                           'name': 'who-data-for-afghanistan', 'maintainer': '196196be-6037-4488-8b71-d786adf4c081',
-                           'owner_org': 'hdx'}
+        dataset, showcase = generate_dataset_and_showcase('http://lala?', hxlproxy_url, downloader, TestAcledAfrica.countrydata)
+        assert dataset == {'maintainer': '8b84230c-e04a-43ec-99e5-41307a203a2f', 'name': 'acled-data-for-cameroon',
+                           'dataset_date': '01/01/1997-12/31/2018', 'groups': [{'name': 'cmr'}],
+                           'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}, {'name': 'HXL'}],
+                           'owner_org': 'b67e6c74-c185-4f43-b561-0e114a736f19', 'data_update_frequency': '0', 'title': 'Cameroon - Conflict Data'}
 
         resources = dataset.get_resources()
-        assert resources == [{'format': 'csv', 'name': 'Life expectancy at birth (years)',
-                              'description': '[Indicator metadata](http://apps.who.int/gho/indicatorregistry/App_Main/view_indicator.aspx?iid=65)',
-                              'url': 'http://papa/GHO/WHOSIS_000001.csv?filter=COUNTRY:AFG&profile=verbose'}]
-        assert showcase == {'image_url': 'http://www.who.int/sysmedia/images/countries/afg.gif',
-                            'url': 'http://www.who.int/countries/afg/en/',
-                            'tags': [{'name': 'indicators'}, {'name': 'World Health Organization'}],
-                            'notes': 'Health indicators for Afghanistan', 'name': 'who-data-for-afghanistan-showcase',
-                            'title': 'Indicators for Afghanistan'}
+        assert resources == [{'description': 'Conflict data with HXL tags', 'name': 'Conflict Data for Cameroon',
+                              'format': 'csv', 'url': 'https://data.humdata.org/hxlproxy/data.csv?url=http%3A%2F%2Flala%3Fiso%3D120&name=ACLEDHXL&tagger-match-all=on&tagger-02-header=iso&tagger-02-tag=%23country%2Bcode&tagger-03-header=event_id_cnty&tagger-03-tag=%23event%2Bcode&tagger-05-header=event_date&tagger-05-tag=+%23date%2Boccurred+&tagger-08-header=event_type&tagger-08-tag=%23event%2Btype&tagger-09-header=actor1&tagger-09-tag=%23group%2Bname%2Bfirst&tagger-10-header=assoc_actor_1&tagger-10-tag=%23group%2Bname%2Bfirst%2Bassoc&tagger-12-header=actor2&tagger-12-tag=%23group%2Bname%2Bsecond&tagger-13-header=assoc_actor_2&tagger-13-tag=%23group%2Bname%2Bsecond%2Bassoc&tagger-16-header=region&tagger-16-tag=%23region%2Bname&tagger-17-header=country&tagger-17-tag=%23country%2Bname&tagger-18-header=admin1&tagger-18-tag=%23adm1%2Bname&tagger-19-header=admin2&tagger-19-tag=%23adm2%2Bname&tagger-20-header=admin3&tagger-20-tag=%23adm3%2Bname&tagger-21-header=location&tagger-21-tag=%23loc%2Bname&tagger-22-header=latitude&tagger-22-tag=%23geo%2Blat&tagger-23-header=longitude&tagger-23-tag=%23geo%2Blon&tagger-25-header=source&tagger-25-tag=%23meta%2Bsource&tagger-27-header=notes&tagger-27-tag=%23description&tagger-28-header=fatalities&tagger-28-tag=%23affected%2Bkilled&header-row=1'}]
+
+        assert showcase == {'url': 'https://www.acleddata.com/dashboard/', 'notes': 'Conflict Data for Cameroon',
+                            'name': 'acled-data-for-cameroon-showcase', 'title': 'Conflict Data for Cameroon',
+                            'image_url': 'https://www.acleddata.com/wp-content/uploads/2018/01/dash.png',
+                            'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}, {'name': 'HXL'}]}
+
+        dataset, showcase = generate_dataset_and_showcase('http://lala?', hxlproxy_url, downloader, {'m49': 4, 'iso3': 'AFG', 'countryname': 'Afghanistan'})
+        assert dataset is None

@@ -21,7 +21,7 @@ Exchange`_ project.
 .. _ACLED: http://www.acleddata.com/
 .. _Humanitarian Data Exchange: http://data.humdata.org/
 
-.. |Build Status| image:: https://travis-ci.org/OCHA-DAP/hdxscraper-acled-africa.svg?branch=master&ts=1
-    :target: https://travis-ci.org/OCHA-DAP/hdxscraper-acled-africa
-.. |Coverage Status| image:: https://coveralls.io/repos/github/OCHA-DAP/hdxscraper-acled-africa/badge.svg?branch=master&ts=1
-    :target: https://coveralls.io/github/OCHA-DAP/hdxscraper-acled-africa?branch=master
+.. |Build Status| image:: https://travis-ci.org/OCHA-DAP/hdxscraper-acled.svg?branch=master&ts=1
+    :target: https://travis-ci.org/OCHA-DAP/hdxscraper-acled
+.. |Coverage Status| image:: https://coveralls.io/repos/github/OCHA-DAP/hdxscraper-acled/badge.svg?branch=master&ts=1
+    :target: https://coveralls.io/github/OCHA-DAP/hdxscraper-acled?branch=master

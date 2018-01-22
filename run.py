@@ -29,7 +29,7 @@ def main():
     with Download() as downloader:
         countriesdata = get_countriesdata(countries_url, downloader)
         logger.info('Number of datasets to upload: %d' % len(countriesdata))
-
+        countriesdata = [countriesdata[0]]
         for countrydata in sorted(countriesdata, key=lambda x: x['iso3']):
             dataset, showcase = generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countrydata)
             if dataset:

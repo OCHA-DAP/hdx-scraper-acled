@@ -60,7 +60,7 @@ def generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countryda
     url = '%surl=%s%s' % (hxlproxy_url, quote_plus(acled_country_url), hxlate)
     earliest_year = 10000
     latest_year = 0
-    for row in downloader.get_tabular_rows(acled_country_url, dict_rows=True, headers=1):
+    for row in downloader.get_tabular_rows(acled_country_url, dict_rows=True, headers=1, bytes_sample_size=20000):
         year = int(row['year'])
         if year < earliest_year:
             earliest_year = year

@@ -10,7 +10,7 @@ from os.path import join
 from hdx.hdx_configuration import Configuration
 from hdx.utilities.downloader import Download
 
-from acled import get_countriesdata, generate_dataset_and_showcase
+from acled import get_countriesdata, generate_dataset_and_showcase, generate_resource_view
 
 from hdx.facades import logging_kwargs
 logging_kwargs['smtp_config_yaml'] = join('config', 'smtp_configuration.yml')
@@ -29,12 +29,14 @@ def main():
     with Download() as downloader:
         countriesdata = get_countriesdata(countries_url, downloader)
         logger.info('Number of datasets to upload: %d' % len(countriesdata))
-        countriesdata = [countriesdata[0]]
+        countriesdata = countriesdata
         for countrydata in sorted(countriesdata, key=lambda x: x['iso3']):
             dataset, showcase = generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countrydata)
             if dataset:
                 dataset.update_from_yaml()
                 dataset.create_in_hdx()
+                resource_view = generate_resource_view(dataset)
+                resource_view.create_in_hdx()
                 showcase.create_in_hdx()
                 showcase.add_dataset(dataset)
 

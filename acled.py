@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-ACLED AFRICA:
-------------
+ACLED:
+-----
 
-Generates Africa csv and xls from the ACLED website.
+Generates HXlated API urls from the ACLED website.
 
 """
 import logging
@@ -12,6 +12,7 @@ from urllib.parse import quote_plus
 
 from hdx.data.dataset import Dataset
 from hdx.data.hdxobject import HDXError
+from hdx.data.resource_view import ResourceView
 from hdx.data.showcase import Showcase
 from hdx.location.country import Country
 from slugify import slugify
@@ -23,10 +24,13 @@ hxlate = '&name=ACLEDHXL&tagger-match-all=on&tagger-02-header=iso&tagger-02-tag=
 
 def get_countriesdata(countries_url, downloader):
     countries = list()
-    for row in downloader.get_tabular_rows(countries_url, dict_rows=True, headers=1):
-        country = row['Country']
+    for row in downloader.get_tabular_rows(countries_url, dict_rows=True, headers=1, format='xlsx'):
+        country = row['Name']
         iso3, _ = Country.get_iso3_country_code_fuzzy(country, exception=ValueError)
         m49 = Country.get_m49_from_iso3(iso3)
+        # m49 = row['ISO Country Number']
+        # iso3 = Country.get_iso3_from_m49(m49)
+        # countryname = Country.get_country_name_from_iso3(iso3)
         countries.append({'m49': m49, 'iso3': iso3, 'countryname': Country.get_country_name_from_iso3(iso3)})
     return countries
 
@@ -78,10 +82,16 @@ def generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countryda
 
     showcase = Showcase({
         'name': '%s-showcase' % slugified_name,
-        'title': 'Conflict Data for %s' % countryname,
-        'notes': 'Conflict Data for %s' % countryname,
+        'title': 'Dashboard',
+        'notes': 'Conflict Data Dashboard',
         'url': 'https://www.acleddata.com/dashboard/',
         'image_url': 'https://www.acleddata.com/wp-content/uploads/2018/01/dash.png'
     })
     showcase.add_tags(tags)
     return dataset, showcase
+
+
+def generate_resource_view(dataset):
+    resourceview = ResourceView({'resource_id': dataset.get_resource()['id']})
+    resourceview.update_from_yaml()
+    return resourceview

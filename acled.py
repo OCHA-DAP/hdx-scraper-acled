@@ -25,13 +25,13 @@ hxlate = '&name=ACLEDHXL&tagger-match-all=on&tagger-02-header=iso&tagger-02-tag=
 def get_countriesdata(countries_url, downloader):
     countries = list()
     for row in downloader.get_tabular_rows(countries_url, dict_rows=True, headers=1, format='xlsx'):
-        country = row['Name']
-        iso3, _ = Country.get_iso3_country_code_fuzzy(country, exception=ValueError)
-        m49 = Country.get_m49_from_iso3(iso3)
-        # m49 = row['ISO Country Number']
-        # iso3 = Country.get_iso3_from_m49(m49)
-        # countryname = Country.get_country_name_from_iso3(iso3)
-        countries.append({'m49': m49, 'iso3': iso3, 'countryname': Country.get_country_name_from_iso3(iso3)})
+        # country = row['Name']
+        # iso3, _ = Country.get_iso3_country_code_fuzzy(country, exception=ValueError)
+        # m49 = Country.get_m49_from_iso3(iso3)
+        m49 = row['ISO Country Number']
+        iso3 = Country.get_iso3_from_m49(m49)
+        countryname = Country.get_country_name_from_iso3(iso3)
+        countries.append({'m49': m49, 'iso3': iso3, 'countryname': countryname})
     return countries
 
 

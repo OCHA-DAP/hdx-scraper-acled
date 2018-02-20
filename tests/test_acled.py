@@ -28,7 +28,7 @@ class TestAcledAfrica():
 
     @pytest.fixture(scope='function')
     def configuration(self):
-        Configuration._create(hdx_key_file=join('tests', 'fixtures', '.hdxkey'),
+        Configuration._create(user_agent='test', hdx_key_file=join('tests', 'fixtures', '.hdxkey'),
                               project_config_yaml=join('tests', 'config', 'project_configuration.yml'))
         Locations.set_validlocations([{'name': 'afg', 'title': 'Afghanistan'}, {'name': 'cmr', 'title': 'Cameroon'}])
         Country.countriesdata(use_live=False)
@@ -81,10 +81,10 @@ class TestAcledAfrica():
         resources = dataset.get_resources()
         assert resources == [TestAcledAfrica.resource]
 
-        assert showcase == {'name': 'acled-data-for-cameroon-showcase', 'notes': 'Conflict Data Dashboard',
-                            'url': 'https://www.acleddata.com/dashboard/',
+        assert showcase == {'name': 'acled-data-for-cameroon-showcase', 'notes': 'Conflict Data Dashboard for Cameroon',
+                            'url': 'https://www.acleddata.com/dashboard/#120',
                             'tags': [{'name': 'conflict'}, {'name': 'political violence'}, {'name': 'protests'}, {'name': 'war'}, {'name': 'HXL'}],
-                            'title': 'Dashboard', 'image_url': 'https://www.acleddata.com/wp-content/uploads/2018/01/dash.png'}
+                            'title': 'Dashboard for Cameroon', 'image_url': 'https://www.acleddata.com/wp-content/uploads/2018/01/dash.png'}
 
         dataset, showcase = generate_dataset_and_showcase('http://lala?', hxlproxy_url, downloader, {'m49': 4, 'iso3': 'AFG', 'countryname': 'Afghanistan'})
         assert dataset is None

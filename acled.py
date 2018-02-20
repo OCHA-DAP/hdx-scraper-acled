@@ -11,7 +11,6 @@ import logging
 from urllib.parse import quote_plus
 
 from hdx.data.dataset import Dataset
-from hdx.data.hdxobject import HDXError
 from hdx.data.resource_view import ResourceView
 from hdx.data.showcase import Showcase
 from hdx.location.country import Country
@@ -29,6 +28,8 @@ def get_countriesdata(countries_url, downloader):
         # iso3, _ = Country.get_iso3_country_code_fuzzy(country, exception=ValueError)
         # m49 = Country.get_m49_from_iso3(iso3)
         m49 = row['ISO Country Number']
+        if not m49:
+            continue
         iso3 = Country.get_iso3_from_m49(m49)
         countryname = Country.get_country_name_from_iso3(iso3)
         countries.append({'m49': m49, 'iso3': iso3, 'countryname': countryname})
@@ -60,7 +61,7 @@ def generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countryda
     url = '%surl=%s%s' % (hxlproxy_url, quote_plus(acled_country_url), hxlate)
     earliest_year = 10000
     latest_year = 0
-    for row in downloader.get_tabular_rows(acled_country_url, dict_rows=True, headers=1, bytes_sample_size=20000):
+    for row in downloader.get_tabular_rows(acled_country_url, dict_rows=True, headers=1):
         year = int(row['year'])
         if year < earliest_year:
             earliest_year = year
@@ -82,9 +83,9 @@ def generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countryda
 
     showcase = Showcase({
         'name': '%s-showcase' % slugified_name,
-        'title': 'Dashboard',
-        'notes': 'Conflict Data Dashboard',
-        'url': 'https://www.acleddata.com/dashboard/',
+        'title': 'Dashboard for %s' % countrydata['countryname'],
+        'notes': 'Conflict Data Dashboard for %s' % countrydata['countryname'],
+        'url': 'https://www.acleddata.com/dashboard/#%03d' % countrydata['m49'],
         'image_url': 'https://www.acleddata.com/wp-content/uploads/2018/01/dash.png'
     })
     showcase.add_tags(tags)

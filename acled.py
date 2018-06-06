@@ -54,7 +54,7 @@ def generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countryda
     dataset.set_organization('b67e6c74-c185-4f43-b561-0e114a736f19')
     dataset.set_expected_update_frequency('Live')
     dataset.add_country_location(countryiso)
-    tags = ['conflict', 'political violence', 'protests', 'war', 'HXL']
+    tags = ['HXL', 'conflicts', 'political violence', 'protests']
     dataset.add_tags(tags)
 
     acled_country_url = '%siso=%d' % (acled_url, countrydata['m49'])

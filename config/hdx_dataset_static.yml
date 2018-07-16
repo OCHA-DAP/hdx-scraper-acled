@@ -1,5 +1,4 @@
 license_id: "cc-by-sa"
-subnational: 1  # has to be 0 or 1. Default 1 for ACLED.
 notes: "The ACLED project codes reported information on the type, agents, exact location, date, and other characteristics of political violence events, demonstrations and select politically relevant non-violent events. ACLED focuses on tracking a range of violent and non-violent actions by political agents, including governments, rebels, militias, communal groups, political parties, external actors, rioters, protesters and civilians. Data contain specific information on the date, location, group names, interaction type, event type, reported fatalities and contextual notes."
 caveats: "ACLED has several rules about fatalities numbers, sourcing and reporting.
 

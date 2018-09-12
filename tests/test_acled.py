@@ -29,7 +29,7 @@ class TestAcledAfrica():
 
     @pytest.fixture(scope='function')
     def configuration(self):
-        Configuration._create(user_agent='test', hdx_key_file=join('tests', 'fixtures', '.hdxkey'),
+        Configuration._create(user_agent='test', hdx_key='12345',
                               project_config_yaml=join('tests', 'config', 'project_configuration.yml'))
         Locations.set_validlocations([{'name': 'afg', 'title': 'Afghanistan'}, {'name': 'cmr', 'title': 'Cameroon'}])
         Country.countriesdata(use_live=False)

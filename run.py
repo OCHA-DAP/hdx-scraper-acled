@@ -6,6 +6,7 @@ Top level script. Calls other functions that generate datasets that this script 
 """
 import logging
 from os.path import join, expanduser
+from time import sleep
 
 from hdx.hdx_configuration import Configuration
 from hdx.utilities.downloader import Download
@@ -40,6 +41,7 @@ def main():
                 resource_view.create_in_hdx()
                 showcase.create_in_hdx()
                 showcase.add_dataset(dataset)
+                sleep(1)
 
 
 if __name__ == '__main__':

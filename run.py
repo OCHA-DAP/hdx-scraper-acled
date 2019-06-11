@@ -36,7 +36,7 @@ def main():
             dataset, showcase = generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countrydata)
             if dataset:
                 dataset.update_from_yaml()
-                dataset['license_other'] = dataset['license_other'].replace('\n', '  \n')
+                dataset['license_other'] = dataset['license_other'].replace('\n', '  \n')  # ensure markdown has line breaks
                 dataset.create_in_hdx()
                 resource_view = generate_resource_view(dataset)
                 resource_view.create_in_hdx()

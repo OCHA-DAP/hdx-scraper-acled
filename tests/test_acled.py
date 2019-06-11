@@ -25,7 +25,8 @@ class TestAcledAfrica():
                'owner_org': 'b67e6c74-c185-4f43-b561-0e114a736f19', 'data_update_frequency': '0',
                'title': 'Cameroon - Conflict Data', 'subnational': '1'}
     resource = {'description': 'Conflict data with HXL tags', 'name': 'Conflict Data for Cameroon',
-                'format': 'csv', 'url': 'https://data.humdata.org/hxlproxy/data.csv?url=http%3A%2F%2Flala%3Fiso%3D120&name=ACLEDHXL&tagger-match-all=on&tagger-02-header=iso&tagger-02-tag=%23country%2Bcode&tagger-03-header=event_id_cnty&tagger-03-tag=%23event%2Bcode&tagger-05-header=event_date&tagger-05-tag=%23date%2Boccurred+&tagger-08-header=event_type&tagger-08-tag=%23event%2Btype&tagger-09-header=actor1&tagger-09-tag=%23group%2Bname%2Bfirst&tagger-10-header=assoc_actor_1&tagger-10-tag=%23group%2Bname%2Bfirst%2Bassoc&tagger-12-header=actor2&tagger-12-tag=%23group%2Bname%2Bsecond&tagger-13-header=assoc_actor_2&tagger-13-tag=%23group%2Bname%2Bsecond%2Bassoc&tagger-16-header=region&tagger-16-tag=%23region%2Bname&tagger-17-header=country&tagger-17-tag=%23country%2Bname&tagger-18-header=admin1&tagger-18-tag=%23adm1%2Bname&tagger-19-header=admin2&tagger-19-tag=%23adm2%2Bname&tagger-20-header=admin3&tagger-20-tag=%23adm3%2Bname&tagger-21-header=location&tagger-21-tag=%23loc%2Bname&tagger-22-header=latitude&tagger-22-tag=%23geo%2Blat&tagger-23-header=longitude&tagger-23-tag=%23geo%2Blon&tagger-25-header=source&tagger-25-tag=%23meta%2Bsource&tagger-27-header=notes&tagger-27-tag=%23description&tagger-28-header=fatalities&tagger-28-tag=%23affected%2Bkilled&header-row=1'}
+                'format': 'csv', 'resource_type': 'api', 'url_type': 'api',
+                'url': 'https://data.humdata.org/hxlproxy/data.csv?url=http%3A%2F%2Flala%3Fiso%3D120&name=ACLEDHXL&tagger-match-all=on&tagger-02-header=iso&tagger-02-tag=%23country%2Bcode&tagger-03-header=event_id_cnty&tagger-03-tag=%23event%2Bcode&tagger-05-header=event_date&tagger-05-tag=%23date%2Boccurred+&tagger-08-header=event_type&tagger-08-tag=%23event%2Btype&tagger-09-header=actor1&tagger-09-tag=%23group%2Bname%2Bfirst&tagger-10-header=assoc_actor_1&tagger-10-tag=%23group%2Bname%2Bfirst%2Bassoc&tagger-12-header=actor2&tagger-12-tag=%23group%2Bname%2Bsecond&tagger-13-header=assoc_actor_2&tagger-13-tag=%23group%2Bname%2Bsecond%2Bassoc&tagger-16-header=region&tagger-16-tag=%23region%2Bname&tagger-17-header=country&tagger-17-tag=%23country%2Bname&tagger-18-header=admin1&tagger-18-tag=%23adm1%2Bname&tagger-19-header=admin2&tagger-19-tag=%23adm2%2Bname&tagger-20-header=admin3&tagger-20-tag=%23adm3%2Bname&tagger-21-header=location&tagger-21-tag=%23loc%2Bname&tagger-22-header=latitude&tagger-22-tag=%23geo%2Blat&tagger-23-header=longitude&tagger-23-tag=%23geo%2Blon&tagger-25-header=source&tagger-25-tag=%23meta%2Bsource&tagger-27-header=notes&tagger-27-tag=%23description&tagger-28-header=fatalities&tagger-28-tag=%23affected%2Bkilled&header-row=1'}
 
     @pytest.fixture(scope='function')
     def configuration(self):
@@ -62,7 +63,7 @@ class TestAcledAfrica():
             @staticmethod
             def get_tabular_rows(url, dict_rows, headers, format=None):
                 if url == 'http://haha':
-                    return [{'Name': 'Cameroon', 'ACLED country-code': 'CMR', 'ISO Country Number': 120, 'Region-code': 'Middle Africa'}]
+                    return [{'Name': 'Cameroon', 'ACLED country-code': 'CMR', 'ISO Code': 120, 'Region-code': 'Middle Africa'}]
                 elif url == 'http://lala?iso=120':
                     return [{'year': '1997'}, {'year': '2018'}]
                 elif url == 'http://lala?iso=4':

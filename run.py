@@ -16,7 +16,7 @@ from acled import get_countriesdata, generate_dataset_and_showcase, generate_res
 from hdx.facades import logging_kwargs
 logging_kwargs['smtp_config_yaml'] = join('config', 'smtp_configuration.yml')
 
-from hdx.facades.hdx_scraperwiki import facade
+from hdx.facades.simple import facade
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +36,7 @@ def main():
             dataset, showcase = generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countrydata)
             if dataset:
                 dataset.update_from_yaml()
+                dataset['license_other'] = dataset['license_other'].replace('\n', '  \n')
                 dataset.create_in_hdx()
                 resource_view = generate_resource_view(dataset)
                 resource_view.create_in_hdx()
@@ -45,4 +46,4 @@ def main():
 
 
 if __name__ == '__main__':
-    facade(main, user_agent_config_yaml=join(expanduser('~'), '.useragents.yml'), user_agent_lookup=lookup, project_config_yaml=join('config', 'project_configuration.yml'))
+    facade(main, hdx_site='feature', user_agent_config_yaml=join(expanduser('~'), '.useragents.yml'), user_agent_lookup=lookup, project_config_yaml=join('config', 'project_configuration.yml'))

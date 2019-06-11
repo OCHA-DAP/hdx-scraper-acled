@@ -27,7 +27,7 @@ def get_countriesdata(countries_url, downloader):
         # country = row['Name']
         # iso3, _ = Country.get_iso3_country_code_fuzzy(country, exception=ValueError)
         # m49 = Country.get_m49_from_iso3(iso3)
-        m49 = row['ISO Country Number']
+        m49 = row['ISO Code']
         if not m49:
             continue
         iso3 = Country.get_iso3_from_m49(m49)

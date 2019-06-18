@@ -1,4 +1,4 @@
 # Collector specific configuration
 base_url: "https://api.acleddata.com/acled/read.csv?limit=0&terms=accept&"
 countries_url: "https://www.acleddata.com/download/3987/"
-hxlproxy_url: "https://proxy.hxlstandard.org/data/e0c1eb.csv?"
+hxlproxy_url: "https://proxy.hxlstandard.org/data.csv?"

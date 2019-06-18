@@ -26,9 +26,10 @@ lookup = 'hdx-scraper-acled'
 def main():
     """Generate dataset and create it in HDX"""
 
-    base_url = Configuration.read()['base_url']
-    countries_url = Configuration.read()['countries_url']
-    hxlproxy_url = Configuration.read()['hxlproxy_url']
+    configuration = Configuration.read()
+    base_url = configuration['base_url']
+    countries_url = configuration['countries_url']
+    hxlproxy_url = configuration['hxlproxy_url']
     with Download() as downloader:
         countriesdata = get_countriesdata(countries_url, downloader)
         logger.info('Number of datasets to upload: %d' % len(countriesdata))

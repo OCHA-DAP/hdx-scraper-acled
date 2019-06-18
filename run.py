@@ -26,14 +26,14 @@ lookup = 'hdx-scraper-acled'
 def main():
     """Generate dataset and create it in HDX"""
 
-    acled_url = Configuration.read()['acled_url']
+    base_url = Configuration.read()['base_url']
     countries_url = Configuration.read()['countries_url']
     hxlproxy_url = Configuration.read()['hxlproxy_url']
     with Download() as downloader:
         countriesdata = get_countriesdata(countries_url, downloader)
         logger.info('Number of datasets to upload: %d' % len(countriesdata))
         for countrydata in sorted(countriesdata, key=lambda x: x['iso3']):
-            dataset, showcase = generate_dataset_and_showcase(acled_url, hxlproxy_url, downloader, countrydata)
+            dataset, showcase = generate_dataset_and_showcase(base_url, hxlproxy_url, downloader, countrydata)
             if dataset:
                 dataset.update_from_yaml()
                 dataset['license_other'] = dataset['license_other'].replace('\n', '  \n')  # ensure markdown has line breaks

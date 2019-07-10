@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-Unit tests for acled_africa.
+Unit tests for acled.
 
 """
 import copy

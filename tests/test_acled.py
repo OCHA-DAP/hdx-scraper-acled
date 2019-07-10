@@ -17,7 +17,7 @@ from hdx.location.country import Country
 from acled import generate_dataset_and_showcase, get_countriesdata, generate_resource_view
 
 
-class TestAcledAfrica():
+class TestAcled():
     countrydata = {'m49': 120, 'iso3': 'CMR', 'countryname': 'Cameroon'}
     dataset = {'maintainer': '8b84230c-e04a-43ec-99e5-41307a203a2f', 'name': 'acled-data-for-cameroon',
                'dataset_date': '01/01/1997-12/31/2018', 'groups': [{'name': 'cmr'}],
@@ -44,23 +44,6 @@ class TestAcledAfrica():
 
         class Download:
             @staticmethod
-            def download(url):
-                response = Response()
-                if url == 'http://lala/GHO?format=json':
-                    def fn():
-                        return {'dimension': [{'code': [{'display': 'Life expectancy at birth (years)',
-                                                         'url': 'http://apps.who.int/gho/indicatorregistry/App_Main/view_indicator.aspx?iid=65',
-                                                         'attr': [{'category': 'DISPLAY_FR', 'value': 'Esperance de vie a la naissance (ans)'},
-                                                                  {'category': 'DISPLAY_ES', 'value': 'Esperanza de vida al nacer'},
-                                                                  {'category': 'DEFINITION_XML', 'value': 'http://apps.who.int/gho/indicatorregistryservice/publicapiservice.asmx/IndicatorGetAsXml?profileCode=WHO&applicationCode=System&languageAlpha2=en&indicatorId=65'},
-                                                                  {'category': 'CATEGORY', 'value': 'Sustainable development goals'},
-                                                                  {'category': 'CATEGORY', 'value': 'something and another'},
-                                                                  {'category': 'RENDERER_ID', 'value': 'RENDER_2'}],
-                                                         'display_sequence': 10, 'label': 'WHOSIS_000001'}]}]}
-                    response.json = fn
-                return response
-
-            @staticmethod
             def get_tabular_rows(url, dict_rows, headers, format=None):
                 if url == 'http://haha':
                     return [{'Name': 'Cameroon', 'ACLED country-code': 'CMR', 'ISO Code': 120, 'Region-code': 'Middle Africa'}]
@@ -73,15 +56,15 @@ class TestAcledAfrica():
 
     def test_get_countriesdata(self, downloader):
         countriesdata = get_countriesdata('http://haha', downloader)
-        assert countriesdata == [TestAcledAfrica.countrydata]
+        assert countriesdata == [TestAcled.countrydata]
 
     def test_generate_dataset_and_showcase(self, configuration, downloader):
         hxlproxy_url = Configuration.read()['hxlproxy_url']
-        dataset, showcase = generate_dataset_and_showcase('http://lala?', hxlproxy_url, downloader, TestAcledAfrica.countrydata)
-        assert dataset == TestAcledAfrica.dataset
+        dataset, showcase = generate_dataset_and_showcase('http://lala?', hxlproxy_url, downloader, TestAcled.countrydata)
+        assert dataset == TestAcled.dataset
 
         resources = dataset.get_resources()
-        assert resources == [TestAcledAfrica.resource]
+        assert resources == [TestAcled.resource]
 
         assert showcase == {'name': 'acled-data-for-cameroon-showcase', 'notes': 'Conflict Data Dashboard for Cameroon',
                             'url': 'https://www.acleddata.com/dashboard/#120',
@@ -92,8 +75,8 @@ class TestAcledAfrica():
         assert dataset is None
 
     def test_generate_resource_view(self):
-        dataset = Dataset(TestAcledAfrica.dataset)
-        resource = copy.deepcopy(TestAcledAfrica.resource)
+        dataset = Dataset(TestAcled.dataset)
+        resource = copy.deepcopy(TestAcled.resource)
         resource['id'] = '123'
         dataset.add_update_resource(resource)
         result = generate_resource_view(dataset)

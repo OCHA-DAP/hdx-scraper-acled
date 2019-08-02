@@ -38,7 +38,7 @@ def main():
             if dataset:
                 dataset.update_from_yaml()
                 dataset['license_other'] = dataset['license_other'].replace('\n', '  \n')  # ensure markdown has line breaks
-                dataset.create_in_hdx()
+                dataset.create_in_hdx(hxl_update=False)
                 resource_view = generate_resource_view(dataset)
                 resource_view.create_in_hdx()
                 showcase.create_in_hdx()

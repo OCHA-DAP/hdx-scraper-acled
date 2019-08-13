@@ -1,2 +1,2 @@
 # Collector specific configuration
-hxlproxy_url: "https://data.humdata.org/hxlproxy/data.csv?"
+hxlproxy_url: "https://proxy.hxlstandard.org/data/download/"

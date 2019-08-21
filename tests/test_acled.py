@@ -77,7 +77,7 @@ class TestAcled():
         dataset, showcase = generate_dataset_and_showcase('http://lala?', hxlproxy_url, downloader, {'m49': 4, 'iso3': 'AFG', 'countryname': 'Afghanistan'})
         assert dataset is None
 
-    def test_generate_resource_view(self):
+    def test_generate_resource_view(self, configuration):
         dataset = Dataset(TestAcled.dataset)
         resource = copy.deepcopy(TestAcled.resource)
         resource['id'] = '123'

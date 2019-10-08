@@ -4,18 +4,15 @@
 Unit tests for acled.
 
 """
-import copy
-import datetime
 from os.path import join
 
 import pytest
-from hdx.data.dataset import Dataset
 from hdx.data.vocabulary import Vocabulary
 from hdx.hdx_configuration import Configuration
 from hdx.hdx_locations import Locations
 from hdx.location.country import Country
 
-from acled import generate_dataset_and_showcase, get_countriesdata, generate_resource_view
+from acled import generate_dataset_and_showcase, get_countriesdata
 
 
 class TestAcled():
@@ -76,12 +73,3 @@ class TestAcled():
 
         dataset, showcase = generate_dataset_and_showcase('http://lala?', hxlproxy_url, downloader, {'m49': 4, 'iso3': 'AFG', 'countryname': 'Afghanistan'})
         assert dataset is None
-
-    def test_generate_resource_view(self, configuration):
-        dataset = Dataset(TestAcled.dataset)
-        resource = copy.deepcopy(TestAcled.resource)
-        resource['id'] = '123'
-        dataset.add_update_resource(resource)
-        result = generate_resource_view(dataset)
-        assert result == {'resource_id': '123', 'description': '', 'title': 'Quick Charts', 'view_type': 'hdx_hxl_preview',
-                          'hxl_preview_config': '{"configVersion":5,"bites":[{"tempShowSaveCancelButtons":false,"ingredient":{"aggregateColumn":null,"valueColumn":"#affected+killed","aggregateFunction":"sum","dateColumn":null,"comparisonValueColumn":null,"comparisonOperator":null,"filters":{"filterWith":[{"#date+year":"$MAX$"}]},"description":""},"type":"key figure","errorMsg":null,"computedProperties":{"explainedFiltersMap":{},"title":"Sum of best","dataTitle":"best","unit":null},"uiProperties":{"internalColorPattern":["#1ebfb3","#0077ce","#f2645a","#9C27B0"],"title":"Fatalities in latest year","postText":"deaths"},"dataProperties":{},"displayCategory":"Key Figures","hashCode":-1955043658},{"tempShowSaveCancelButtons":false,"ingredient":{"aggregateColumn":"#date+year","valueColumn":"#affected+killed","aggregateFunction":"sum","dateColumn":null,"comparisonValueColumn":null,"comparisonOperator":null,"filters":{},"description":""},"type":"chart","recipeOptions":{"forcedChartType":"bar"},"errorMsg":null,"computedProperties":{"explainedFiltersMap":{},"pieChart":false,"title":"Sum of best by year","dataTitle":"best"},"uiProperties":{"swapAxis":true,"showGrid":true,"color":"#1ebfb3","sortingByValue1":null,"sortingByCategory1":"DESC","internalColorPattern":["#1ebfb3","#0077ce","#f2645a","#9C27B0"],"title":"Fatalities each  year","limit":null,"dataTitle":"deaths"},"dataProperties":{},"displayCategory":"Charts","hashCode":2084034886},{"tempShowSaveCancelButtons":false,"ingredient":{"aggregateColumn":"#adm1+name","valueColumn":"#affected+killed","aggregateFunction":"sum","dateColumn":null,"comparisonValueColumn":null,"comparisonOperator":null,"filters":{"filterWith":[{"#date+year":"$MAX$"}],"filterWithout":[{"#adm1":""}]},"description":""},"type":"chart","recipeOptions":{"forcedChartType":"bar"},"errorMsg":null,"computedProperties":{"explainedFiltersMap":{},"pieChart":false,"title":"Sum of best by adm_1","dataTitle":"best"},"uiProperties":{"swapAxis":true,"showGrid":true,"color":"#1ebfb3","sortingByValue1":"DESC","sortingByCategory1":null,"internalColorPattern":["#1ebfb3","#0077ce","#f2645a","#9C27B0"],"title":"Fatalities per region in latest year","dataTitle":"deaths"},"dataProperties":{},"displayCategory":"Charts","hashCode":738289179}],"recipeUrl":"https://raw.githubusercontent.com/mcarans/hxl-recipes/dev/recipes/genericlatestyear/recipe.json"}'}

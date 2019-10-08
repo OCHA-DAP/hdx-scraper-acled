@@ -11,7 +11,7 @@ from time import sleep
 from hdx.hdx_configuration import Configuration
 from hdx.utilities.downloader import Download
 
-from acled import get_countriesdata, generate_dataset_and_showcase, generate_resource_view
+from acled import get_countriesdata, generate_dataset_and_showcase
 
 from hdx.facades.simple import facade
 
@@ -36,8 +36,7 @@ def main():
                 dataset.update_from_yaml()
                 dataset['license_other'] = dataset['license_other'].replace('\n', '  \n')  # ensure markdown has line breaks
                 dataset.create_in_hdx(hxl_update=False)
-                resource_view = generate_resource_view(dataset)
-                resource_view.create_in_hdx()
+                dataset.generate_resource_view()
                 showcase.create_in_hdx()
                 showcase.add_dataset(dataset)
                 sleep(1)

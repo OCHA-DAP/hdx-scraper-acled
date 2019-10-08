@@ -82,7 +82,6 @@ def generate_dataset_and_showcase(base_url, hxlproxy_url, downloader, countrydat
     }
     dataset.add_update_resource(resource)
     dataset.set_dataset_year_range(earliest_year, latest_year)
-    dataset.set_quickchart_resource(0)
 
     showcase = Showcase({
         'name': '%s-showcase' % slugified_name,
@@ -93,9 +92,3 @@ def generate_dataset_and_showcase(base_url, hxlproxy_url, downloader, countrydat
     })
     showcase.add_tags(tags)
     return dataset, showcase
-
-
-def generate_resource_view(dataset):
-    resourceview = ResourceView({'resource_id': dataset.get_resource()['id']})
-    resourceview.update_from_yaml()
-    return resourceview

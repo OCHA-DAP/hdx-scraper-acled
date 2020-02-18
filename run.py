@@ -10,8 +10,9 @@ from time import sleep
 
 from hdx.hdx_configuration import Configuration
 from hdx.utilities.downloader import Download
+from hdx.utilities.path import progress_storing_tempdir
 
-from acled import get_countriesdata, generate_dataset_and_showcase
+from acled import get_countries, generate_dataset_and_showcase
 
 from hdx.facades.simple import facade
 
@@ -26,20 +27,18 @@ def main():
     configuration = Configuration.read()
     base_url = configuration['base_url']
     countries_url = configuration['countries_url']
-    hxlproxy_url = configuration['hxlproxy_url']
     with Download() as downloader:
-        countriesdata = get_countriesdata(countries_url, downloader)
-        logger.info('Number of datasets to upload: %d' % len(countriesdata))
-        for countrydata in sorted(countriesdata, key=lambda x: x['iso3']):
-            dataset, showcase = generate_dataset_and_showcase(base_url, hxlproxy_url, downloader, countrydata)
+        countries = get_countries(countries_url, downloader)
+        logger.info('Number of datasets to upload: %d' % len(countries))
+        for folder, country in progress_storing_tempdir('ACLED', sorted(countries, key=lambda x: x['iso3']), 'iso3'):
+            dataset, showcase = generate_dataset_and_showcase(base_url, downloader, folder, country)
             if dataset:
                 dataset.update_from_yaml()
                 dataset['license_other'] = dataset['license_other'].replace('\n', '  \n')  # ensure markdown has line breaks
-                dataset.create_in_hdx(hxl_update=False)
+                dataset.create_in_hdx(remove_additional_resources=True, hxl_update=False, updated_by_script='HDX Scraper: ACLED')
                 dataset.generate_resource_view()
                 showcase.create_in_hdx()
                 showcase.add_dataset(dataset)
-                sleep(1)
 
 
 if __name__ == '__main__':

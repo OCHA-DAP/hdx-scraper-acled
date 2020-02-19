@@ -21,7 +21,7 @@ class TestAcled():
     dataset = {'maintainer': '8b84230c-e04a-43ec-99e5-41307a203a2f', 'name': 'acled-data-for-cameroon',
                'dataset_date': '01/01/1997-12/31/2018', 'groups': [{'name': 'cmr'}],
                'tags': [{'name': 'hxl', 'vocabulary_id': '4e61d464-4943-4e97-973a-84673c1aaa87'}, {'name': 'violence and conflict', 'vocabulary_id': '4e61d464-4943-4e97-973a-84673c1aaa87'}, {'name': 'protests', 'vocabulary_id': '4e61d464-4943-4e97-973a-84673c1aaa87'}, {'name': 'security incidents', 'vocabulary_id': '4e61d464-4943-4e97-973a-84673c1aaa87'}],
-               'owner_org': 'b67e6c74-c185-4f43-b561-0e114a736f19', 'data_update_frequency': '0',
+               'owner_org': 'b67e6c74-c185-4f43-b561-0e114a736f19', 'data_update_frequency': '1',
                'title': 'Cameroon - Conflict Data', 'subnational': '1'}
     resource = {'description': 'Conflict data with HXL tags', 'name': 'Conflict Data for Cameroon',
                 'format': 'csv', 'resource_type': 'file.upload', 'url_type': 'upload'}

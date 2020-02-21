@@ -35,8 +35,8 @@ def main():
             if dataset:
                 dataset.update_from_yaml()
                 dataset['license_other'] = dataset['license_other'].replace('\n', '  \n')  # ensure markdown has line breaks
+                dataset.generate_resource_view(1)
                 dataset.create_in_hdx(remove_additional_resources=True, hxl_update=False, updated_by_script='HDX Scraper: ACLED')
-                dataset.generate_resource_view()
                 showcase.create_in_hdx()
                 showcase.add_dataset(dataset)
 

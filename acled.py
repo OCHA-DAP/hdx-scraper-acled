@@ -61,7 +61,9 @@ def generate_dataset_and_showcase(base_url, downloader, folder, country):
         'name': 'Conflict Data for %s' % countryname,
         'description': 'Conflict data with HXL tags'
     }
-    success, results = dataset.download_and_generate_resource(downloader, url, hxltags, folder, filename, resourcedata, yearcol='year')
+    quickcharts = {'cutdown': 2, 'cutdownhashtags': ['#date+year', '#adm1+name', '#affected+killed']}
+    success, results = dataset.download_and_generate_resource(downloader, url, hxltags, folder, filename, resourcedata,
+                                                              yearcol='year', quickcharts=quickcharts)
     if success is False:
         logger.warning('%s has no data!' % countryname)
         return None, None

@@ -23,8 +23,10 @@ class TestAcled():
                'tags': [{'name': 'hxl', 'vocabulary_id': '4e61d464-4943-4e97-973a-84673c1aaa87'}, {'name': 'violence and conflict', 'vocabulary_id': '4e61d464-4943-4e97-973a-84673c1aaa87'}, {'name': 'protests', 'vocabulary_id': '4e61d464-4943-4e97-973a-84673c1aaa87'}, {'name': 'security incidents', 'vocabulary_id': '4e61d464-4943-4e97-973a-84673c1aaa87'}],
                'owner_org': 'b67e6c74-c185-4f43-b561-0e114a736f19', 'data_update_frequency': '1',
                'title': 'Cameroon - Conflict Data', 'subnational': '1'}
-    resource = {'description': 'Conflict data with HXL tags', 'name': 'Conflict Data for Cameroon',
-                'format': 'csv', 'resource_type': 'file.upload', 'url_type': 'upload'}
+    resources = [{'description': 'Conflict data with HXL tags', 'name': 'Conflict Data for Cameroon',
+                  'format': 'csv', 'resource_type': 'file.upload', 'url_type': 'upload'},
+                 {'name': 'QuickCharts-Conflict Data for Cameroon', 'description': 'Cut down data for QuickCharts',
+                  'format': 'csv', 'resource_type': 'file.upload', 'url_type': 'upload'}]
 
     @pytest.fixture(scope='function')
     def configuration(self):
@@ -65,7 +67,7 @@ class TestAcled():
             assert dataset == TestAcled.dataset
 
             resources = dataset.get_resources()
-            assert resources == [TestAcled.resource]
+            assert resources == TestAcled.resources
 
             assert showcase == {'name': 'acled-data-for-cameroon-showcase', 'notes': 'Conflict Data Dashboard for Cameroon',
                                 'url': 'https://www.acleddata.com/dashboard/#120',

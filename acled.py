@@ -49,7 +49,7 @@ def generate_dataset_and_showcase(base_url, downloader, folder, country):
     })
     dataset.set_maintainer('8b84230c-e04a-43ec-99e5-41307a203a2f')
     dataset.set_organization('b67e6c74-c185-4f43-b561-0e114a736f19')
-    dataset.set_expected_update_frequency('As needed')
+    dataset.set_expected_update_frequency('Every day')
     dataset.set_subnational(True)
     dataset.add_country_location(countryiso)
     tags = ['hxl', 'violence and conflict', 'protests', 'security incidents']

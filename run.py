@@ -6,7 +6,6 @@ Top level script. Calls other functions that generate datasets that this script 
 """
 import logging
 from os.path import join, expanduser
-from time import sleep
 
 from hdx.hdx_configuration import Configuration
 from hdx.utilities.downloader import Download
@@ -30,13 +29,14 @@ def main():
     with Download() as downloader:
         countries = get_countries(countries_url, downloader)
         logger.info('Number of datasets to upload: %d' % len(countries))
-        for folder, country in progress_storing_tempdir('ACLED', sorted(countries, key=lambda x: x['iso3']), 'iso3'):
+        for info, country in progress_storing_tempdir('ACLED', sorted(countries, key=lambda x: x['iso3']), 'iso3'):
+            folder = info['folder']
             dataset, showcase = generate_dataset_and_showcase(base_url, downloader, folder, country)
             if dataset:
                 dataset.update_from_yaml()
                 dataset['license_other'] = dataset['license_other'].replace('\n', '  \n')  # ensure markdown has line breaks
                 dataset.generate_resource_view(1)
-                dataset.create_in_hdx(remove_additional_resources=True, hxl_update=False, updated_by_script='HDX Scraper: ACLED')
+                dataset.create_in_hdx(remove_additional_resources=True, hxl_update=False, updated_by_script='HDX Scraper: ACLED', batch=info['batch'])
                 showcase.create_in_hdx()
                 showcase.add_dataset(dataset)
 

@@ -39,9 +39,9 @@ def get_countries(countries_url, downloader):
 
 def generate_dataset_and_showcase(base_url, downloader, folder, country):
     countryname = country['countryname']
-    title = '%s - Conflict Data' % countryname
-    logger.info('Creating dataset: %s' % title)
-    slugified_name = slugify('ACLED Data for %s' % countryname).lower()
+    title = f'{countryname} - Conflict Data'
+    logger.info(f'Creating dataset: {title}')
+    slugified_name = slugify(f'ACLED Data for {countryname}').lower()
     countryiso = country['iso3']
     dataset = Dataset({
         'name': slugified_name,
@@ -55,24 +55,24 @@ def generate_dataset_and_showcase(base_url, downloader, folder, country):
     tags = ['hxl', 'violence and conflict', 'protests', 'security incidents']
     dataset.add_tags(tags)
 
-    url = '%siso=%d' % (base_url, country['m49'])
-    filename = 'conflict_data_%s.csv' % countryiso
+    url = f'{base_url}iso={country["m49"]}'
+    filename = f'conflict_data_{countryiso}.csv'
     resourcedata = {
-        'name': 'Conflict Data for %s' % countryname,
+        'name': f'Conflict Data for {countryname}',
         'description': 'Conflict data with HXL tags'
     }
     quickcharts = {'cutdown': 2, 'cutdownhashtags': ['#date+year', '#adm1+name', '#affected+killed']}
     success, results = dataset.download_and_generate_resource(downloader, url, hxltags, folder, filename, resourcedata,
                                                               yearcol='year', quickcharts=quickcharts)
     if success is False:
-        logger.warning('%s has no data!' % countryname)
+        logger.warning(f'{countryname} has no data!')
         return None, None
 
     showcase = Showcase({
-        'name': '%s-showcase' % slugified_name,
-        'title': 'Dashboard for %s' % country['countryname'],
-        'notes': 'Conflict Data Dashboard for %s' % country['countryname'],
-        'url': 'https://www.acleddata.com/dashboard/#%03d' % country['m49'],
+        'name': f'{slugified_name}-showcase',
+        'title': f'Dashboard for {country["countryname"]}',
+        'notes': f'Conflict Data Dashboard for {country["countryname"]}',
+        'url': f'https://www.acleddata.com/dashboard/#{country["m49"]:03d}',
         'image_url': 'https://www.acleddata.com/wp-content/uploads/2018/01/dash.png'
     })
     showcase.add_tags(tags)

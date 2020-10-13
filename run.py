@@ -26,7 +26,7 @@ def main():
     configuration = Configuration.read()
     base_url = configuration['base_url']
     countries_url = configuration['countries_url']
-    with Download() as downloader:
+    with Download(extra_params_yaml=join(expanduser('~'), '.extraparams.yml'), extra_params_lookup=lookup) as downloader:
         countries = get_countries(countries_url, downloader)
         logger.info('Number of datasets to upload: %d' % len(countries))
         for info, country in progress_storing_tempdir('ACLED', sorted(countries, key=lambda x: x['iso3']), 'iso3'):

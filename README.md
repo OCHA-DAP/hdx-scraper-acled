@@ -1,4 +1,7 @@
 ### Collector for ACLED's Datasets
+
+ARCHIVED - ACLED now run a script they developed themselves.
+
 [![Build Status](https://travis-ci.org/OCHA-DAP/hdx-scraper-acled.svg?branch=master&ts=1)](https://travis-ci.org/OCHA-DAP/hdx-scraper-acled) [![Coverage Status](https://coveralls.io/repos/github/OCHA-DAP/hdx-scraper-acled/badge.svg?branch=master&ts=1)](https://coveralls.io/github/OCHA-DAP/hdx-scraper-acled?branch=master)
 
 This script connects to the [ACLED API](https://www.acleddata.com/download/2833/) and extracts data country by country creating a dataset per country in HDX. The scraper takes around 20 minutes to run. It makes in the order of 200 reads from ACLED and 1000 read/writes (API calls) to HDX in total. It does not create temporary files as it puts urls into HDX. It is run when ACLED make changes (not in their data but for example in their API), in practice this is in the order of once or twice a year. 

@@ -1,1 +1,28 @@
 # Collector specific configuration
+
+datasets:
+  - "civilian-targeting-events-and-fatalities"
+  - "demonstration-events"
+  - "political-violence-events-and-fatalities"
+
+sheets:
+  - "Non_HRP"
+  - "HRP_1"
+  - "HRP_2"
+
+hxl_tags:
+    "Country ISO3": "#country+code"
+    "Admin 1 PCode": "#adm1+code"
+    "Admin 1 Name": "#adm1+name"
+    "Admin 2 PCode": "#adm2+code"
+    "Admin 2 Name": "#adm2+name"
+    "Start Date": "#date+start"
+    "End Date": "#date+end"
+    "Event Type": "#event+type"
+    "Events": "#event+num"
+    "Fatalities": "#fatality+num"
+    "Dataset Id": "#meta+dataset_id"
+    "Resource Id": "#meta+resource_id"
+
+tags:
+  - "conflict-violence"

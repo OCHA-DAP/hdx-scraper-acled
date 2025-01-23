@@ -17,11 +17,13 @@ from hdx.utilities.path import (
 )
 from hdx.utilities.retriever import Retrieve
 
+from src.hdx.scraper.acled.acled import Acled
+
 logger = logging.getLogger(__name__)
 
 _USER_AGENT_LOOKUP = "hdx-scraper-acled"
 _SAVED_DATA_DIR = "saved_data"  # Keep in repo to avoid deletion in /tmp
-_UPDATED_BY_SCRIPT = "HDX Scraper: acled"
+_UPDATED_BY_SCRIPT = "HDX Scraper: ACLED"
 
 
 def main(
@@ -38,12 +40,8 @@ def main(
         None
     """
     configuration = Configuration.read()
-    if not User.check_current_user_organization_access(
-        "hdx", "create_dataset"
-    ):
-        raise PermissionError(
-            "API Token does not give access to HDX organisation!"
-        )
+    if not User.check_current_user_organization_access("hdx", "create_dataset"):
+        raise PermissionError("API Token does not give access to HDX organisation!")
 
     with wheretostart_tempdir_batch(folder=_USER_AGENT_LOOKUP) as info:
         temp_dir = info["folder"]
@@ -56,13 +54,12 @@ def main(
                 save=save,
                 use_saved=use_saved,
             )
-            #
-            # Steps to generate dataset
-            #
+
+            acled = Acled(configuration, retriever, temp_dir)
+            acled.download_data()
+            dataset = acled.generate_dataset()
             dataset.update_from_yaml(
-                path=join(
-                    dirname(__file__), "config", "hdx_dataset_static.yaml"
-                )
+                path=join(dirname(__file__), "config", "hdx_dataset_static.yaml")
             )
             dataset.create_in_hdx(
                 remove_additional_resources=True,
@@ -76,7 +73,7 @@ def main(
 if __name__ == "__main__":
     facade(
         main,
-        hdx_site="dev",
+        hdx_site="prod",
         user_agent_config_yaml=join(expanduser("~"), ".useragents.yaml"),
         user_agent_lookup=_USER_AGENT_LOOKUP,
         project_config_yaml=join(

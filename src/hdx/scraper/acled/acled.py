@@ -37,9 +37,12 @@ class Acled:
                 if "ISO3" not in headers:
                     country_names = contents["Country"]
                     country_isos = [
-                        Country.get_iso3_country_code(country)
+                        Country.get_iso3_country_code_fuzzy(country)[0]
                         for country in country_names
                     ]
+                    for i in range(len(country_isos)):
+                        if country_names[i] == "Kosovo":
+                            country_isos[i] = "XKX"
                     contents["ISO3"] = country_isos
                 if "Admin1" not in headers:
                     contents["Admin1"] = None

@@ -11,6 +11,7 @@ from os.path import dirname, expanduser, join
 from hdx.api.configuration import Configuration
 from hdx.data.user import User
 from hdx.facades.infer_arguments import facade
+from hdx.utilities.dateparse import now_utc
 from hdx.utilities.downloader import Download
 from hdx.utilities.path import (
     wheretostart_tempdir_batch,
@@ -56,7 +57,11 @@ def main(
             )
 
             acled = Acled(configuration, retriever, temp_dir)
-            acled.download_data()
+
+            today = now_utc()
+            year = today.year
+            acled.download_data(year)
+
             dataset = acled.generate_dataset()
             dataset.update_from_yaml(
                 path=join(dirname(__file__), "config", "hdx_dataset_static.yaml")

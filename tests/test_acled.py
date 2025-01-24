@@ -49,7 +49,9 @@ class TestAcled:
     def config_dir(self, fixtures_dir):
         return join("src", "hdx", "scraper", "acled", "config")
 
-    def test_acled(self, configuration, fixtures_dir, input_dir, config_dir):
+    def test_acled(
+        self, configuration, read_dataset, fixtures_dir, input_dir, config_dir
+    ):
         with temp_dir(
             "TestAcled",
             delete_on_success=True,
@@ -65,9 +67,10 @@ class TestAcled:
                     use_saved=True,
                 )
                 acled = Acled(configuration, retriever, tempdir)
-                acled.download_data()
+                acled.download_data(2025)
                 assert len(acled.dates) == 6
-                assert len(acled.data) == 20373
+                assert len(acled.data) == 2
+                assert len(acled.data["2025-2029"]) == 14373
 
                 dataset = acled.generate_dataset()
                 dataset.update_from_yaml(path=join(config_dir, "hdx_dataset_static.yaml"))
@@ -119,16 +122,18 @@ class TestAcled:
                 }
 
                 resources = dataset.get_resources()
+                assert len(resources) == 2
                 assert resources[0] == {
-                    "name": "conflict_events_and_fatalities",
+                    "name": "conflict_events_and_fatalities for 2025-2029",
                     "description": "A weekly dataset providing the total number of "
-                    "reported events and fatalities broken down by country and month.",
+                    "reported conflict events and fatalities broken down by country "
+                    "and month for 2025-2029.",
                     "format": "csv",
                     "resource_type": "file.upload",
                     "url_type": "upload",
                 }
 
                 assert filecmp.cmp(
-                    join(tempdir, "conflict_events_and_fatalities.csv"),
-                    join(fixtures_dir, "conflict_events_and_fatalities.csv"),
+                    join(tempdir, "conflict_events_and_fatalities_2025-2029.csv"),
+                    join(fixtures_dir, "conflict_events_and_fatalities_2025-2029.csv"),
                 )

@@ -9,7 +9,7 @@ from hdx.data.dataset import Dataset
 from hdx.location.country import Country
 from hdx.utilities.dateparse import parse_date_range
 from hdx.utilities.retriever import Retrieve
-from pandas import DataFrame, concat, read_excel
+from pandas import concat, read_excel
 
 logger = logging.getLogger(__name__)
 
@@ -20,9 +20,9 @@ class Acled:
         self._retriever = retriever
         self._temp_dir = temp_dir
         self.dates = []
-        self.data = DataFrame()
+        self.data = {}
 
-    def download_data(self):
+    def download_data(self, year: int):
         for dataset_name in self._configuration["datasets"]:
             event_type = dataset_name[: dataset_name.index("event") - 1]
             event_type = event_type.replace("-", "_")
@@ -70,12 +70,22 @@ class Acled:
                     },
                     inplace=True,
                 )
-                contents = contents[self._configuration["hxl_tags"].keys()]
+                # contents = contents[self._configuration["hxl_tags"].keys()]
 
-                if len(self.data) == 0:
-                    self.data = contents
-                else:
-                    self.data = concat([self.data, contents])
+                for year_start in range(1995, year + 1, 5):
+                    year_end = year_start + 4
+                    year_range = f"{year_start}-{year_end}"
+                    subset = contents.loc[
+                        (contents["Year"] >= year_start) & (contents["Year"] <= year_end),
+                        self._configuration["hxl_tags"].keys(),
+                    ]
+                    if len(subset) == 0:
+                        continue
+
+                    if year_range in self.data:
+                        self.data[year_range] = concat([self.data[year_range], subset])
+                    else:
+                        self.data[year_range] = subset
 
     def generate_dataset(self) -> Optional[Dataset]:
         dataset = Dataset(
@@ -90,22 +100,24 @@ class Acled:
         end_date = max(self.dates)
         dataset.set_time_period(start_date, end_date)
 
-        self.data = self.data.to_dict(orient="records")
-        resourcedata = {
-            "name": "conflict_events_and_fatalities",
-            "description": "A weekly dataset providing the total number of reported "
-            "events and fatalities broken down by country and month.",
-        }
         hxl_tags = self._configuration["hxl_tags"]
         headers = list(hxl_tags.keys())
-        dataset.generate_resource_from_iterable(
-            headers,
-            self.data,
-            hxl_tags,
-            self._temp_dir,
-            "conflict_events_and_fatalities.csv",
-            resourcedata,
-            encoding="utf-8-sig",
-        )
+        for date_range in reversed(self.data.keys()):
+            data = self.data[date_range].to_dict(orient="records")
+            resourcedata = {
+                "name": f"conflict_events_and_fatalities for {date_range}",
+                "description": f"A weekly dataset providing the total number of reported "
+                f"conflict events and fatalities broken down by country and month for "
+                f"{date_range}.",
+            }
+            dataset.generate_resource_from_iterable(
+                headers,
+                data,
+                hxl_tags,
+                self._temp_dir,
+                f"conflict_events_and_fatalities_{date_range}.csv",
+                resourcedata,
+                encoding="utf-8-sig",
+            )
 
         return dataset

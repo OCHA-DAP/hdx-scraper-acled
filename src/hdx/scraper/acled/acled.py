@@ -105,10 +105,9 @@ class Acled:
         for date_range in reversed(self.data.keys()):
             data = self.data[date_range].to_dict(orient="records")
             resourcedata = {
-                "name": f"conflict_events_and_fatalities for {date_range}",
-                "description": f"A weekly dataset providing the total number of reported "
-                f"conflict events and fatalities broken down by country and month for "
-                f"{date_range}.",
+                "name": f"conflict events and fatalities for {date_range}",
+                "description": f"Total number of reported conflict events and fatalities "
+                f"broken down by country and month for {date_range}.",
             }
             dataset.generate_resource_from_iterable(
                 headers,

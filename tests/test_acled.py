@@ -124,10 +124,9 @@ class TestAcled:
                 resources = dataset.get_resources()
                 assert len(resources) == 2
                 assert resources[0] == {
-                    "name": "conflict_events_and_fatalities for 2025-2029",
-                    "description": "A weekly dataset providing the total number of "
-                    "reported conflict events and fatalities broken down by country "
-                    "and month for 2025-2029.",
+                    "name": "conflict events and fatalities for 2025-2029",
+                    "description": "Total number of reported conflict events and "
+                    "fatalities broken down by country and month for 2025-2029.",
                     "format": "csv",
                     "resource_type": "file.upload",
                     "url_type": "upload",

@@ -4,8 +4,10 @@
 import logging
 from typing import Optional
 
+import numpy as np
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
+from hdx.location.adminlevel import AdminLevel
 from hdx.location.country import Country
 from hdx.utilities.dateparse import parse_date_range
 from hdx.utilities.retriever import Retrieve
@@ -19,10 +21,16 @@ class Acled:
         self._configuration = configuration
         self._retriever = retriever
         self._temp_dir = temp_dir
-        self.dates = []
         self.data = {}
+        self.dates = []
+        self.pcodes = []
 
-    def download_data(self, year: int) -> None:
+    def get_pcodes(self) -> None:
+        dataset = AdminLevel.get_libhxl_dataset(retriever=self._retriever).cache()
+        for row in dataset:
+            self.pcodes.append(row.get("#adm+code"))
+
+    def download_data(self, current_year: int) -> None:
         for dataset_name in self._configuration["datasets"]:
             event_type = dataset_name[: dataset_name.index("event") - 1]
             event_type = event_type.replace("-", "_")
@@ -36,20 +44,66 @@ class Acled:
             for sheet_name in self._configuration["sheets"]:
                 contents = read_excel(file_path, sheet_name=sheet_name)
                 headers = contents.columns
+                contents["event_type"] = event_type
 
-                # Add ISO codes, HRP and GHO status
-                country_names = contents["Country"]
+                # Add admin columns
+                if "Admin1" not in headers:
+                    contents["Admin1"] = None
+                    contents["Admin2"] = None
+                    contents["Admin1 Pcode"] = None
+                    contents["Admin2 Pcode"] = None
+                    admin_level = 0
+                else:
+                    admin_level = 2
+                contents["admin_level"] = admin_level
+
+                # Check for duplicates and check against global p-codes
+                contents["Admin2 Pcode"] = contents["Admin2 Pcode"].replace(np.nan, None)
+                contents["Admin1 Pcode"] = contents["Admin1 Pcode"].replace(np.nan, None)
+                subset = contents[
+                    ["Admin2 Pcode", "Admin1", "Admin2", "event_type", "Month", "Year"]
+                ]
+                subset.loc[contents["Admin2 Pcode"].isna(), "Admin2 Pcode"] = (
+                    contents.loc[contents["Admin2 Pcode"].isna(), "Country"]
+                )
+                if admin_level == 2:
+                    pcodes = contents["Admin2 Pcode"]
+                    in_global_pcodes = pcodes.isin(self.pcodes)
+                else:
+                    in_global_pcodes = [
+                        False if c == "Kosovo" else True for c in contents["Country"]
+                    ]
+                duplicates = subset.duplicated(keep=False)
+
+                # Loop through rows to get errors, ISO, HRP/GHO status, reference dates
+                errors = []
                 country_isos = []
                 hrps = []
                 ghos = []
-                for i in range(len(country_names)):
+                start_dates = []
+                end_dates = []
+
+                for i in range(len(contents)):
+                    error = None
+                    matching_pcode = in_global_pcodes[i]
+                    if matching_pcode is False:
+                        error = "Non-matching p-code"
+                    duplicate = duplicates[i]
+                    if duplicate is np.True_:
+                        if error:
+                            error = error + " | Duplicate row"
+                        else:
+                            error = "Duplicate row"
+                    errors.append(error)
+
+                    # Get ISO code, HRP and GHO status
                     if "ISO3" in headers:
                         country_iso = contents["ISO3"][i]
                     else:
                         country_iso = Country.get_iso3_country_code_fuzzy(
-                            country_names[i]
+                            contents["Country"][i]
                         )[0]
-                    if country_names[i] == "Kosovo":
+                    if contents["Country"][i] == "Kosovo":
                         country_iso = "XKX"
                     hrp = Country.get_hrp_status_from_iso3(country_iso)
                     gho = Country.get_gho_status_from_iso3(country_iso)
@@ -60,31 +114,23 @@ class Acled:
                     country_isos.append(country_iso)
                     hrps.append(hrp)
                     ghos.append(gho)
+
+                    month = contents["Month"][i]
+                    year = contents["Year"][i]
+                    start_date, end_date = parse_date_range(f"{month} {year}")
+                    start_dates.append(start_date)
+                    end_dates.append(end_date)
+
                 contents["ISO3"] = country_isos
                 contents["has_hrp"] = hrps
                 contents["in_gho"] = ghos
-
-                # Add admin columns
-                if "Admin1" not in headers:
-                    contents["Admin1"] = None
-                    contents["Admin2"] = None
-                    contents["Admin1 Pcode"] = None
-                    contents["Admin2 Pcode"] = None
-                    contents["admin_level"] = 0
-                else:
-                    contents["admin_level"] = 2
+                contents["error"] = errors
+                contents["reference_period_start"] = start_dates
+                contents["reference_period_end"] = end_dates
 
                 # Add fatalities column
                 if "Fatalities" not in headers:
                     contents["Fatalities"] = None
-                contents["event_type"] = event_type
-
-                # Add reference period
-                months = contents["Month"]
-                years = contents["Year"]
-                dates = [parse_date_range(f"{m} {y}") for m, y in zip(months, years)]
-                contents["reference_period_start"] = [d[0] for d in dates]
-                contents["reference_period_end"] = [d[1] for d in dates]
 
                 # Add original dataset and resource ids
                 contents["dataset_id"] = dataset["id"]
@@ -104,7 +150,7 @@ class Acled:
                 )
 
                 # Split data by years
-                for year_start in range(1995, year + 1, 5):
+                for year_start in range(1995, current_year + 1, 5):
                     year_end = year_start + 4
                     year_range = f"{year_start}-{year_end}"
                     subset = contents.loc[

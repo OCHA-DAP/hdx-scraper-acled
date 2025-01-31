@@ -57,6 +57,7 @@ def main(
             )
 
             acled = Acled(configuration, retriever, temp_dir)
+            acled.get_pcodes()
 
             today = now_utc()
             year = today.year

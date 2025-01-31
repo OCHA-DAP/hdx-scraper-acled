@@ -1,14 +1,13 @@
 license_id: hdx-other
 license_other: "By using ACLED data you agree to abide by the [Terms of Use and Attribution Policy](https://acleddata.com/terms-of-use/)."
-methodology: Other
-methodology_other: "Please review the [ACLED Codebook](https://acleddata.com/download/2827) for more information about event definitions, sub-event definitions, and coding methodology. For more information about our fatality and sourcing methodology, please review our [Fatality FAQs](https://acleddata.com/acleddatanew/wp-content/uploads/dlm_uploads/2020/02/FAQs_-ACLED-Fatality-Methodology_2020.pdf) and [Sourcing FAQs](https://acleddata.com/acleddatanew/wp-content/uploads/dlm_uploads/2020/02/FAQs_ACLED-Sourcing-Methodology.pdf). Time period coverage varies by country and region, so please consult the ACLED [Coverage List](https://acleddata.com/download/4404/). For more methodology resources, click [here](https://acleddata.com/resources/general-guides/)."
-caveats: None
-dataset_source: ACLED
+methodology: Registry
+caveats: "HDX HAPI is refreshed daily, but the source datasets may have different update schedules. Please refer to the source datasets for each subcategory to verify their specific update frequency.\n"
+dataset_source: Armed Conflict Location & Event Data Project (ACLED)
 package_creator: HDX Data Systems Team
-private: False
+private: True
 maintainer: aa13de36-28c5-47a7-8d0b-6d7c754ba8c8
-owner_org:  hdx
+owner_org:  hdx-hapi
 data_update_frequency: 7
-notes: "A weekly dataset providing the total number of reported civilian targeting events and fatalities, demonstration events, and political violence events and fatalities broken down by country.  \n\nThese are pulled from three global ACLED datasets: [Civilian Targeting Events and Fatalities](https://data.humdata.org/dataset/civilian-targeting-events-and-fatalities), [Demonstration Events](https://data.humdata.org/dataset/demonstration-events), and [Political Violence Events and Fatalities](https://data.humdata.org/dataset/political-violence-events-and-fatalities)."
+notes: "This dataset contains data obtained from the\n[HDX Humanitarian API](https://hapi.humdata.org/) (HDX HAPI),\nwhich provides standardized humanitarian indicators designed\nfor seamless interoperability from multiple sources.\nThe data facilitates automated workflows and visualizations\nto support humanitarian decision making.\nFor more information, please see the HDX HAPI\n[landing page](https://data.humdata.org/hapi)\nand\n[documentation](https://hdx-hapi.readthedocs.io/en/latest/).\n"
 subnational: "1"
 dataset_preview: no_preview

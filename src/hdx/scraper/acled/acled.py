@@ -22,7 +22,7 @@ class Acled:
         self.dates = []
         self.data = {}
 
-    def download_data(self, year: int):
+    def download_data(self, year: int) -> None:
         for dataset_name in self._configuration["datasets"]:
             event_type = dataset_name[: dataset_name.index("event") - 1]
             event_type = event_type.replace("-", "_")
@@ -34,43 +34,62 @@ class Acled:
             for sheet_name in self._configuration["sheets"]:
                 contents = read_excel(file_path, sheet_name=sheet_name)
                 headers = contents.columns
-                if "ISO3" not in headers:
-                    country_names = contents["Country"]
-                    country_isos = [
-                        Country.get_iso3_country_code_fuzzy(country)[0]
-                        for country in country_names
-                    ]
-                    for i in range(len(country_isos)):
-                        if country_names[i] == "Kosovo":
-                            country_isos[i] = "XKX"
-                    contents["ISO3"] = country_isos
+                country_names = contents["Country"]
+                country_isos = []
+                hrps = []
+                ghos = []
+                for i in range(len(country_names)):
+                    if "ISO3" in headers:
+                        country_iso = contents["ISO3"][i]
+                    else:
+                        country_iso = Country.get_iso3_country_code_fuzzy(
+                            country_names[i]
+                        )[0]
+                    if country_names[i] == "Kosovo":
+                        country_iso = "XKX"
+                    hrp = Country.get_hrp_status_from_iso3(country_iso)
+                    gho = Country.get_gho_status_from_iso3(country_iso)
+                    if hrp is None:
+                        hrp = False
+                    if gho is None:
+                        gho = False
+                    country_isos.append(country_iso)
+                    hrps.append(hrp)
+                    ghos.append(gho)
+                contents["ISO3"] = country_isos
+                contents["has_hrp"] = hrps
+                contents["in_gho"] = ghos
                 if "Admin1" not in headers:
                     contents["Admin1"] = None
                     contents["Admin2"] = None
                     contents["Admin1 Pcode"] = None
                     contents["Admin2 Pcode"] = None
+                    contents["admin_level"] = 0
+                else:
+                    contents["admin_level"] = 2
                 if "Fatalities" not in headers:
                     contents["Fatalities"] = None
-                contents["Event Type"] = event_type
+                contents["event_type"] = event_type
                 months = contents["Month"]
                 years = contents["Year"]
                 dates = [parse_date_range(f"{m} {y}") for m, y in zip(months, years)]
-                contents["Start Date"] = [d[0] for d in dates]
-                contents["End Date"] = [d[1] for d in dates]
-                contents["Dataset Id"] = dataset["id"]
-                contents["Resource Id"] = resource["id"]
+                contents["reference_period_start"] = [d[0] for d in dates]
+                contents["reference_period_end"] = [d[1] for d in dates]
+                contents["dataset_id"] = dataset["id"]
+                contents["resource_id"] = resource["id"]
 
                 contents.rename(
                     columns={
-                        "ISO3": "Country ISO3",
-                        "Admin1": "Admin 1 Name",
-                        "Admin2": "Admin 2 Name",
-                        "Admin1 Pcode": "Admin 1 PCode",
-                        "Admin2 Pcode": "Admin 2 PCode",
+                        "ISO3": "location_code",
+                        "Admin1": "admin1_name",
+                        "Admin2": "admin2_name",
+                        "Admin1 Pcode": "admin1_code",
+                        "Admin2 Pcode": "admin2_code",
+                        "Fatalities": "fatalities",
+                        "Events": "events",
                     },
                     inplace=True,
                 )
-                # contents = contents[self._configuration["hxl_tags"].keys()]
 
                 for year_start in range(1995, year + 1, 5):
                     year_end = year_start + 4
@@ -86,12 +105,13 @@ class Acled:
                         self.data[year_range] = concat([self.data[year_range], subset])
                     else:
                         self.data[year_range] = subset
+        return
 
     def generate_dataset(self) -> Optional[Dataset]:
         dataset = Dataset(
             {
-                "name": "global-acled",
-                "title": "Global ACLED data",
+                "name": "hdx-hapi-conflict-event-test",
+                "title": "HDX HAPI - Coordination & Context: Conflict Events",
             }
         )
         dataset.add_tags(self._configuration["tags"])
@@ -105,16 +125,19 @@ class Acled:
         for date_range in reversed(self.data.keys()):
             data = self.data[date_range].to_dict(orient="records")
             resourcedata = {
-                "name": f"conflict events and fatalities for {date_range}",
-                "description": f"Total number of reported conflict events and fatalities "
-                f"broken down by country and month for {date_range}.",
+                "name": self._configuration["resource_name"].replace(
+                    "date_range", date_range
+                ),
+                "description": self._configuration["resource_description"].replace(
+                    "date_range", date_range
+                ),
             }
             dataset.generate_resource_from_iterable(
                 headers,
                 data,
                 hxl_tags,
                 self._temp_dir,
-                f"conflict_events_and_fatalities_{date_range}.csv",
+                f"hdx_hapi_conflict_event_global_{date_range}.csv",
                 resourcedata,
                 encoding="utf-8-sig",
             )

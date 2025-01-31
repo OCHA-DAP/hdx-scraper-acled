@@ -5,24 +5,31 @@ datasets:
   - "demonstration-events"
   - "political-violence-events-and-fatalities"
 
+resource_name: "Global Coordination & Context: Conflict Events (date_range)"
+
+resource_description: "Conflict Event data from HDX HAPI (date_range), please see [the documentation](https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/coordination_and_context/#conflict-events) for more information"
+
 sheets:
   - "Non_HRP"
   - "HRP_1"
   - "HRP_2"
 
 hxl_tags:
-    "Country ISO3": "#country+code"
-    "Admin 1 PCode": "#adm1+code"
-    "Admin 1 Name": "#adm1+name"
-    "Admin 2 PCode": "#adm2+code"
-    "Admin 2 Name": "#adm2+name"
-    "Start Date": "#date+start"
-    "End Date": "#date+end"
-    "Event Type": "#event+type"
-    "Events": "#event+num"
-    "Fatalities": "#fatality+num"
-    "Dataset Id": "#meta+dataset_id"
-    "Resource Id": "#meta+resource_id"
+    "location_code": "#country+code"
+    "has_hrp": "#meta+has_hrp"
+    "in_gho": "#meta+in_gho"
+    "admin1_code": "#adm1+code"
+    "admin1_name": "#adm1+name"
+    "admin2_code": "#adm2+code"
+    "admin2_name": "#adm2+name"
+    "admin_level": "#adm+level"
+    "event_type": "#event+type"
+    "events": "#indicator+event+num"
+    "fatalities": "#affected+killed"
+    "reference_period_start": "#date+start"
+    "reference_period_end": "#date+end"
+    "dataset_id": "#meta+dataset_id"
+    "resource_id": "#meta+resource_id"
 
 tags:
   - "conflict-violence"

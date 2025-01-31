@@ -75,64 +75,59 @@ class TestAcled:
                 dataset = acled.generate_dataset()
                 dataset.update_from_yaml(path=join(config_dir, "hdx_dataset_static.yaml"))
                 assert dataset == {
-                    "name": "global-acled",
-                    "title": "Global ACLED data",
+                    "caveats": "HDX HAPI is refreshed daily, but the source datasets may "
+                    "have different update schedules. Please refer to the source "
+                    "datasets for each subcategory to verify their specific update "
+                    "frequency.\n",
+                    "data_update_frequency": 7,
+                    "dataset_date": "[1997-01-01T00:00:00 TO 2025-01-10T23:59:59]",
+                    "dataset_preview": "no_preview",
+                    "dataset_source": "Armed Conflict Location & Event Data Project "
+                    "(ACLED)",
+                    "groups": [{"name": "world"}],
+                    "license_id": "hdx-other",
+                    "license_other": "By using ACLED data you agree to abide by the "
+                    "[Terms of Use and Attribution Policy](https://acleddata.com/terms-of-use/).",
+                    "maintainer": "aa13de36-28c5-47a7-8d0b-6d7c754ba8c8",
+                    "methodology": "Registry",
+                    "name": "hdx-hapi-conflict-event-test",
+                    "notes": "This dataset contains data obtained from the\n"
+                    "[HDX Humanitarian API](https://hapi.humdata.org/) (HDX HAPI),\n"
+                    "which provides standardized humanitarian indicators designed\n"
+                    "for seamless interoperability from multiple sources.\n"
+                    "The data facilitates automated workflows and visualizations\n"
+                    "to support humanitarian decision making.\n"
+                    "For more information, please see the HDX HAPI\n"
+                    "[landing page](https://data.humdata.org/hapi)\n"
+                    "and\n"
+                    "[documentation](https://hdx-hapi.readthedocs.io/en/latest/).\n",
+                    "owner_org": "hdx-hapi",
+                    "package_creator": "HDX Data Systems Team",
+                    "private": True,
+                    "subnational": "1",
                     "tags": [
                         {
                             "name": "conflict-violence",
                             "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                         }
                     ],
-                    "groups": [{"name": "world"}],
-                    "dataset_date": "[1997-01-01T00:00:00 TO 2025-01-10T23:59:59]",
-                    "license_id": "hdx-other",
-                    "license_other": "By using ACLED data you agree to abide by the "
-                    "[Terms of Use and Attribution Policy](https://acleddata.com/terms-of-use/).",
-                    "methodology": "Other",
-                    "methodology_other": "Please review the [ACLED Codebook]"
-                    "(https://acleddata.com/download/2827) for more information about "
-                    "event definitions, sub-event definitions, and coding methodology. "
-                    "For more information about our fatality and sourcing methodology, "
-                    "please review our [Fatality FAQs](https://acleddata.com/acleddatanew/wp-"
-                    "content/uploads/dlm_uploads/2020/02/FAQs_-ACLED-Fatality-Methodology_"
-                    "2020.pdf) and [Sourcing FAQs](https://acleddata.com/acleddatanew/wp-"
-                    "content/uploads/dlm_uploads/2020/02/FAQs_ACLED-Sourcing-Methodology."
-                    "pdf). Time period coverage varies by country and region, so please "
-                    "consult the ACLED [Coverage List](https://acleddata.com/download/"
-                    "4404/). For more methodology resources, click [here]"
-                    "(https://acleddata.com/resources/general-guides/).",
-                    "caveats": "None",
-                    "dataset_source": "ACLED",
-                    "package_creator": "HDX Data Systems Team",
-                    "private": False,
-                    "maintainer": "aa13de36-28c5-47a7-8d0b-6d7c754ba8c8",
-                    "owner_org": "hdx",
-                    "data_update_frequency": 7,
-                    "notes": "A weekly dataset providing the total number of reported "
-                    "civilian targeting events and fatalities, demonstration events, and "
-                    "political violence events and fatalities broken down by country.  "
-                    "\n\nThese are pulled from three global ACLED datasets: [Civilian "
-                    "Targeting Events and Fatalities](https://data.humdata.org/dataset/ci"
-                    "vilian-targeting-events-and-fatalities), [Demonstration Events]"
-                    "(https://data.humdata.org/dataset/demonstration-events), and "
-                    "[Political Violence Events and Fatalities](https://data.humdata.org"
-                    "/dataset/political-violence-events-and-fatalities).",
-                    "subnational": "1",
-                    "dataset_preview": "no_preview",
+                    "title": "HDX HAPI - Coordination & Context: Conflict Events",
                 }
 
                 resources = dataset.get_resources()
                 assert len(resources) == 2
                 assert resources[0] == {
-                    "name": "conflict events and fatalities for 2025-2029",
-                    "description": "Total number of reported conflict events and "
-                    "fatalities broken down by country and month for 2025-2029.",
+                    "description": "Conflict Event data from HDX HAPI (2025-2029), "
+                    "please see [the documentation](https://hdx-hapi.readthedocs.io/en/"
+                    "latest/data_usage_guides/coordination_and_context/#conflict-events) "
+                    "for more information",
                     "format": "csv",
+                    "name": "Global Coordination & Context: Conflict Events (2025-2029)",
                     "resource_type": "file.upload",
                     "url_type": "upload",
                 }
 
                 assert filecmp.cmp(
-                    join(tempdir, "conflict_events_and_fatalities_2025-2029.csv"),
-                    join(fixtures_dir, "conflict_events_and_fatalities_2025-2029.csv"),
+                    join(tempdir, "hdx_hapi_conflict_event_global_2025-2029.csv"),
+                    join(fixtures_dir, "hdx_hapi_conflict_event_global_2025-2029.csv"),
                 )

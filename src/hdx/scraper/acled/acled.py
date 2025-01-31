@@ -26,6 +26,8 @@ class Acled:
         for dataset_name in self._configuration["datasets"]:
             event_type = dataset_name[: dataset_name.index("event") - 1]
             event_type = event_type.replace("-", "_")
+
+            # Download and read data
             dataset = Dataset.read_from_hdx(dataset_name)
             resource = dataset.get_resource(0)
             self.dates.append(dataset.get_time_period()["startdate"])
@@ -34,6 +36,8 @@ class Acled:
             for sheet_name in self._configuration["sheets"]:
                 contents = read_excel(file_path, sheet_name=sheet_name)
                 headers = contents.columns
+
+                # Add ISO codes, HRP and GHO status
                 country_names = contents["Country"]
                 country_isos = []
                 hrps = []
@@ -59,6 +63,8 @@ class Acled:
                 contents["ISO3"] = country_isos
                 contents["has_hrp"] = hrps
                 contents["in_gho"] = ghos
+
+                # Add admin columns
                 if "Admin1" not in headers:
                     contents["Admin1"] = None
                     contents["Admin2"] = None
@@ -67,14 +73,20 @@ class Acled:
                     contents["admin_level"] = 0
                 else:
                     contents["admin_level"] = 2
+
+                # Add fatalities column
                 if "Fatalities" not in headers:
                     contents["Fatalities"] = None
                 contents["event_type"] = event_type
+
+                # Add reference period
                 months = contents["Month"]
                 years = contents["Year"]
                 dates = [parse_date_range(f"{m} {y}") for m, y in zip(months, years)]
                 contents["reference_period_start"] = [d[0] for d in dates]
                 contents["reference_period_end"] = [d[1] for d in dates]
+
+                # Add original dataset and resource ids
                 contents["dataset_id"] = dataset["id"]
                 contents["resource_id"] = resource["id"]
 
@@ -91,6 +103,7 @@ class Acled:
                     inplace=True,
                 )
 
+                # Split data by years
                 for year_start in range(1995, year + 1, 5):
                     year_end = year_start + 4
                     year_range = f"{year_start}-{year_end}"

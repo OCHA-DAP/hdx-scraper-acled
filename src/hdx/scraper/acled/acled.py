@@ -45,6 +45,7 @@ class Acled:
                 contents = read_excel(file_path, sheet_name=sheet_name)
                 headers = contents.columns
                 contents["event_type"] = event_type
+                contents.replace(np.nan, None)
 
                 # Add admin columns
                 if "Admin1" not in headers:
@@ -57,26 +58,22 @@ class Acled:
                     admin_level = 2
                 contents["admin_level"] = admin_level
 
-                # Check for duplicates and check against global p-codes
-                contents["Admin2 Pcode"] = contents["Admin2 Pcode"].replace(np.nan, None)
-                contents["Admin1 Pcode"] = contents["Admin1 Pcode"].replace(np.nan, None)
+                # Check for duplicates and missing p-codes
                 subset = contents[
                     ["Admin2 Pcode", "Admin1", "Admin2", "event_type", "Month", "Year"]
                 ]
                 subset.loc[contents["Admin2 Pcode"].isna(), "Admin2 Pcode"] = (
                     contents.loc[contents["Admin2 Pcode"].isna(), "Country"]
                 )
-                if admin_level == 2:
-                    pcodes = contents["Admin2 Pcode"]
-                    in_global_pcodes = pcodes.isin(self.pcodes)
-                else:
-                    in_global_pcodes = [
-                        False if c == "Kosovo" else True for c in contents["Country"]
-                    ]
                 duplicates = subset.duplicated(keep=False)
+                contents["error"] = None
+                contents.loc[duplicates, "error"] = "Duplicate row"
+                if admin_level == 0:
+                    contents.loc[contents["Country"] == "Kosovo", "error"] = (
+                        "Non matching p-code"
+                    )
 
-                # Loop through rows to get errors, ISO, HRP/GHO status, reference dates
-                errors = []
+                # Loop through rows to check pcodes, get ISO, HRP/GHO status, dates
                 country_isos = []
                 hrps = []
                 ghos = []
@@ -84,18 +81,6 @@ class Acled:
                 end_dates = []
 
                 for i in range(len(contents)):
-                    error = None
-                    matching_pcode = in_global_pcodes[i]
-                    if matching_pcode is False:
-                        error = "Non-matching p-code"
-                    duplicate = duplicates[i]
-                    if duplicate is np.True_:
-                        if error:
-                            error = error + " | Duplicate row"
-                        else:
-                            error = "Duplicate row"
-                    errors.append(error)
-
                     # Get ISO code, HRP and GHO status
                     if "ISO3" in headers:
                         country_iso = contents["ISO3"][i]
@@ -124,7 +109,6 @@ class Acled:
                 contents["ISO3"] = country_isos
                 contents["has_hrp"] = hrps
                 contents["in_gho"] = ghos
-                contents["error"] = errors
                 contents["reference_period_start"] = start_dates
                 contents["reference_period_end"] = end_dates
 

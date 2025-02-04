@@ -1,4 +1,4 @@
-line-length = 90
+line-length = 95
 exclude = ["_version.py"]
 
 [lint]

@@ -6,6 +6,7 @@ from typing import Optional
 
 import numpy as np
 from hdx.api.configuration import Configuration
+from hdx.api.utilities.hdx_error_handler import HDXErrorHandler
 from hdx.data.dataset import Dataset
 from hdx.location.adminlevel import AdminLevel
 from hdx.location.country import Country
@@ -17,13 +18,20 @@ logger = logging.getLogger(__name__)
 
 
 class Acled:
-    def __init__(self, configuration: Configuration, retriever: Retrieve, temp_dir: str):
+    def __init__(
+        self,
+        configuration: Configuration,
+        retriever: Retrieve,
+        temp_dir: str,
+        error_handler: HDXErrorHandler,
+    ):
         self._configuration = configuration
         self._retriever = retriever
         self._temp_dir = temp_dir
+        self._admins = []
+        self._error_handler = error_handler
         self.data = {}
         self.dates = []
-        self._admins = []
 
     def get_pcodes(self) -> None:
         for admin_level in [1, 2]:
@@ -65,9 +73,9 @@ class Acled:
                 subset = contents[
                     ["Admin2 Pcode", "Admin1", "Admin2", "event_type", "Month", "Year"]
                 ]
-                subset.loc[contents["Admin2 Pcode"].isna(), "Admin2 Pcode"] = (
-                    contents.loc[contents["Admin2 Pcode"].isna(), "Country"]
-                )
+                subset.loc[contents["Admin2 Pcode"].isna(), "Admin2 Pcode"] = contents.loc[
+                    contents["Admin2 Pcode"].isna(), "Country"
+                ]
                 duplicates = subset.duplicated(keep=False)
                 contents["error"] = None
                 contents.loc[duplicates, "error"] = "Duplicate row"
@@ -124,15 +132,19 @@ class Acled:
                         pcode = contents["Admin2 Pcode"][i]
                         if not pcode or pcode not in self._admins[1].pcodes:
                             admin1_name = contents["Admin1"][1]
-                            adm1_pcode, _ = self._admins[0].get_pcode(
-                                country_iso, admin1_name
-                            )
+                            adm1_pcode, _ = self._admins[0].get_pcode(country_iso, admin1_name)
                             admin2_name = contents["Admin2"][i]
                             if admin2_name:
                                 pcode, _ = self._admins[1].get_pcode(
                                     country_iso, admin2_name, parent=adm1_pcode
                                 )
                         if not pcode:
+                            self._error_handler.add_missing_value_message(
+                                "ACLED",
+                                dataset_name,
+                                "admin 2 pcode",
+                                admin2_name,
+                            )
                             adm1_pcodes.append(None)
                             adm2_pcodes.append(None)
                             adm1_names.append(None)
@@ -210,9 +222,7 @@ class Acled:
         for date_range in reversed(self.data.keys()):
             data = self.data[date_range].to_dict(orient="records")
             resourcedata = {
-                "name": self._configuration["resource_name"].replace(
-                    "date_range", date_range
-                ),
+                "name": self._configuration["resource_name"].replace("date_range", date_range),
                 "description": self._configuration["resource_description"].replace(
                     "date_range", date_range
                 ),

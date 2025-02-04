@@ -23,12 +23,15 @@ class Acled:
         self._temp_dir = temp_dir
         self.data = {}
         self.dates = []
-        self.pcodes = []
+        self._admins = []
 
     def get_pcodes(self) -> None:
-        dataset = AdminLevel.get_libhxl_dataset(retriever=self._retriever).cache()
-        for row in dataset:
-            self.pcodes.append(row.get("#adm+code"))
+        for admin_level in [1, 2]:
+            admin = AdminLevel(admin_level=admin_level, retriever=self._retriever)
+            dataset = admin.get_libhxl_dataset(retriever=self._retriever)
+            admin.setup_from_libhxl_dataset(dataset)
+            admin.load_pcode_formats()
+            self._admins.append(admin)
 
     def download_data(self, current_year: int) -> None:
         for dataset_name in self._configuration["datasets"]:
@@ -45,7 +48,7 @@ class Acled:
                 contents = read_excel(file_path, sheet_name=sheet_name)
                 headers = contents.columns
                 contents["event_type"] = event_type
-                contents.replace(np.nan, None)
+                contents.replace(np.nan, None, inplace=True)
 
                 # Add admin columns
                 if "Admin1" not in headers:
@@ -79,6 +82,10 @@ class Acled:
                 ghos = []
                 start_dates = []
                 end_dates = []
+                adm1_pcodes = []
+                adm2_pcodes = []
+                adm1_names = []
+                adm2_names = []
 
                 for i in range(len(contents)):
                     # Get ISO code, HRP and GHO status
@@ -106,11 +113,48 @@ class Acled:
                     start_dates.append(start_date)
                     end_dates.append(end_date)
 
+                    # Fill in pcodes and names
+                    if admin_level == 0:
+                        adm1_pcodes.append(None)
+                        adm2_pcodes.append(None)
+                        adm1_names.append(None)
+                        adm2_names.append(None)
+
+                    if admin_level == 2:
+                        pcode = contents["Admin2 Pcode"][i]
+                        if not pcode or pcode not in self._admins[1].pcodes:
+                            admin1_name = contents["Admin1"][1]
+                            adm1_pcode, _ = self._admins[0].get_pcode(
+                                country_iso, admin1_name
+                            )
+                            admin2_name = contents["Admin2"][i]
+                            if admin2_name:
+                                pcode, _ = self._admins[1].get_pcode(
+                                    country_iso, admin2_name, parent=adm1_pcode
+                                )
+                        if not pcode:
+                            adm1_pcodes.append(None)
+                            adm2_pcodes.append(None)
+                            adm1_names.append(None)
+                            adm2_names.append(None)
+                            continue
+                        adm2_pcodes.append(pcode)
+                        adm2_name = self._admins[1].pcode_to_name.get(pcode)
+                        adm2_names.append(adm2_name)
+                        adm1_pcode = self._admins[1].pcode_to_parent.get(pcode)
+                        adm1_pcodes.append(adm1_pcode)
+                        adm1_name = self._admins[0].pcode_to_name.get(adm1_pcode)
+                        adm1_names.append(adm1_name)
+
                 contents["ISO3"] = country_isos
                 contents["has_hrp"] = hrps
                 contents["in_gho"] = ghos
                 contents["reference_period_start"] = start_dates
                 contents["reference_period_end"] = end_dates
+                contents["admin1_code"] = adm1_pcodes
+                contents["admin2_code"] = adm2_pcodes
+                contents["admin1_name"] = adm1_names
+                contents["admin2_name"] = adm2_names
 
                 # Add fatalities column
                 if "Fatalities" not in headers:
@@ -123,10 +167,8 @@ class Acled:
                 contents.rename(
                     columns={
                         "ISO3": "location_code",
-                        "Admin1": "admin1_name",
-                        "Admin2": "admin2_name",
-                        "Admin1 Pcode": "admin1_code",
-                        "Admin2 Pcode": "admin2_code",
+                        "Admin1": "provider_admin1_name",
+                        "Admin2": "provider_admin2_name",
                         "Fatalities": "fatalities",
                         "Events": "events",
                     },

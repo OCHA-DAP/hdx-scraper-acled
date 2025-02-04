@@ -18,6 +18,8 @@ hxl_tags:
     "location_code": "#country+code"
     "has_hrp": "#meta+has_hrp"
     "in_gho": "#meta+in_gho"
+    "provider_admin1_name": "#adm1+name+provider"
+    "provider_admin2_name": "#adm2+name+provider"
     "admin1_code": "#adm1+code"
     "admin1_name": "#adm1+name"
     "admin2_code": "#adm2+code"

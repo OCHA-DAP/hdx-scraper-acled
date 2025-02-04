@@ -67,6 +67,7 @@ class TestAcled:
                     use_saved=True,
                 )
                 acled = Acled(configuration, retriever, tempdir)
+                acled.get_pcodes()
                 acled.download_data(2025)
                 assert len(acled.dates) == 6
                 assert len(acled.data) == 2

@@ -103,7 +103,7 @@ class TestAcled:
                     "[documentation](https://hdx-hapi.readthedocs.io/en/latest/).\n",
                     "owner_org": "hdx-hapi",
                     "package_creator": "HDX Data Systems Team",
-                    "private": True,
+                    "private": False,
                     "subnational": "1",
                     "tags": [
                         {

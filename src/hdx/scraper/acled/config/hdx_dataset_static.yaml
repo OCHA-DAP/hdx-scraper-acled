@@ -4,7 +4,7 @@ methodology: Registry
 caveats: "HDX HAPI is refreshed daily, but the source datasets may have different update schedules. Please refer to the source datasets for each subcategory to verify their specific update frequency.\n"
 dataset_source: Armed Conflict Location & Event Data Project (ACLED)
 package_creator: HDX Data Systems Team
-private: True
+private: False
 maintainer: aa13de36-28c5-47a7-8d0b-6d7c754ba8c8
 owner_org:  hdx-hapi
 data_update_frequency: 7

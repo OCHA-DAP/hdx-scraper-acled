@@ -76,10 +76,7 @@ class TestAcled:
                     dataset = acled.generate_dataset()
                     dataset.update_from_yaml(path=join(config_dir, "hdx_dataset_static.yaml"))
                     assert dataset == {
-                        "caveats": "HDX HAPI is refreshed daily, but the source datasets may "
-                        "have different update schedules. Please refer to the source "
-                        "datasets for each subcategory to verify their specific update "
-                        "frequency.\n",
+                        "caveats": "",
                         "data_update_frequency": 7,
                         "dataset_date": "[1997-01-01T00:00:00 TO 2025-01-10T23:59:59]",
                         "dataset_preview": "no_preview",

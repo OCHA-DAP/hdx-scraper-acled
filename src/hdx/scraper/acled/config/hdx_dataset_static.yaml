@@ -1,7 +1,7 @@
 license_id: hdx-other
 license_other: "By using ACLED data you agree to abide by the [Terms of Use and Attribution Policy](https://acleddata.com/terms-of-use/)."
 methodology: Registry
-caveats: "HDX HAPI is refreshed daily, but the source datasets may have different update schedules. Please refer to the source datasets for each subcategory to verify their specific update frequency.\n"
+caveats: ""
 dataset_source: Armed Conflict Location & Event Data Project (ACLED)
 package_creator: HDX Data Systems Team
 private: False

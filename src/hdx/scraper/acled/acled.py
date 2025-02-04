@@ -83,6 +83,12 @@ class Acled:
                     contents.loc[contents["Country"] == "Kosovo", "error"] = (
                         "Non matching p-code"
                     )
+                if sum(duplicates) > 0:
+                    self._error_handler.add_message(
+                        "ACLED",
+                        dataset_name,
+                        f"{sum(duplicates)} duplicates found",
+                    )
 
                 # Loop through rows to check pcodes, get ISO, HRP/GHO status, dates
                 country_isos = []

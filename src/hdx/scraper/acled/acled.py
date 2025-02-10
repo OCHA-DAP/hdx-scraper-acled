@@ -77,6 +77,7 @@ class Acled:
                     contents["Admin2 Pcode"].isna(), "Country"
                 ]
                 duplicates = subset.duplicated(keep=False)
+                contents["warning"] = None
                 contents["error"] = None
                 contents.loc[duplicates, "error"] = "Duplicate row"
                 if admin_level == 0:

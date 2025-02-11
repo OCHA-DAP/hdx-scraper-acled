@@ -31,7 +31,7 @@ click==8.1.8
     # via
     #   -c requirements.txt
     #   typer
-coverage==7.6.10
+coverage==7.6.11
     # via pytest-cov
 defopt==6.4.0
     # via

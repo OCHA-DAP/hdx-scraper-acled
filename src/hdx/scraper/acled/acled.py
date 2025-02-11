@@ -101,6 +101,7 @@ class Acled:
                 adm2_pcodes = []
                 adm1_names = []
                 adm2_names = []
+                warnings = []
 
                 for i in range(len(contents)):
                     # Get ISO code, HRP and GHO status
@@ -129,6 +130,7 @@ class Acled:
                     end_dates.append(end_date)
 
                     # Fill in pcodes and names
+                    warning = None
                     if admin_level == 0:
                         adm1_pcodes.append(None)
                         adm2_pcodes.append(None)
@@ -137,14 +139,37 @@ class Acled:
 
                     if admin_level == 2:
                         pcode = contents["Admin2 Pcode"][i]
-                        if not pcode or pcode not in self._admins[1].pcodes:
-                            admin1_name = contents["Admin1"][1]
-                            adm1_pcode, _ = self._admins[0].get_pcode(country_iso, admin1_name)
-                            admin2_name = contents["Admin2"][i]
-                            if admin2_name:
-                                pcode, _ = self._admins[1].get_pcode(
-                                    country_iso, admin2_name, parent=adm1_pcode
+                        admin2_name = contents["Admin2"][i]
+                        if not pcode:
+                            self._error_handler.add_missing_value_message(
+                                "ACLED",
+                                dataset_name,
+                                f"admin {admin_level} pcode",
+                                admin2_name,
+                            )
+                            warning = f"Missing pcode for {admin2_name}!"
+                        elif pcode not in self._admins[1].pcodes:
+                            matched_pcode = self._admins[1].convert_admin_pcode_length(
+                                country_iso, pcode, parent=contents["Admin1 Pcode"][i]
+                            )
+                            if matched_pcode:
+                                pcode = matched_pcode
+                            else:
+                                self._error_handler.add_missing_value_message(
+                                    "ACLED",
+                                    dataset_name,
+                                    f"admin {admin_level} pcode",
+                                    pcode,
                                 )
+                                warning = f"Unknown pcode {pcode}!"
+                                admin1_name = contents["Admin1"][1]
+                                adm1_pcode, _ = self._admins[0].get_pcode(
+                                    country_iso, admin1_name
+                                )
+                                if admin2_name:
+                                    pcode, _ = self._admins[1].get_pcode(
+                                        country_iso, admin2_name, parent=adm1_pcode
+                                    )
                         if not pcode:
                             self._error_handler.add_missing_value_message(
                                 "ACLED",
@@ -156,6 +181,7 @@ class Acled:
                             adm2_pcodes.append(None)
                             adm1_names.append(None)
                             adm2_names.append(None)
+                            warnings.append(warning)
                             continue
                         adm2_pcodes.append(pcode)
                         adm2_name = self._admins[1].pcode_to_name.get(pcode)
@@ -164,6 +190,7 @@ class Acled:
                         adm1_pcodes.append(adm1_pcode)
                         adm1_name = self._admins[0].pcode_to_name.get(adm1_pcode)
                         adm1_names.append(adm1_name)
+                        warnings.append(warning)
 
                 contents["ISO3"] = country_isos
                 contents["has_hrp"] = hrps

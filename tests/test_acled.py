@@ -88,7 +88,7 @@ class TestAcled:
                         "[Terms of Use and Attribution Policy](https://acleddata.com/terms-of-use/).",
                         "maintainer": "aa13de36-28c5-47a7-8d0b-6d7c754ba8c8",
                         "methodology": "Registry",
-                        "name": "hdx-hapi-conflict-event-test",
+                        "name": "hdx-hapi-conflict-events",
                         "notes": "This dataset contains data obtained from the\n"
                         "[HDX Humanitarian API](https://hapi.humdata.org/) (HDX HAPI),\n"
                         "which provides standardized humanitarian indicators designed\n"

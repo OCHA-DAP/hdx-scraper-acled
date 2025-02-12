@@ -115,10 +115,8 @@ class Acled:
                         country_iso = "XKX"
                     hrp = Country.get_hrp_status_from_iso3(country_iso)
                     gho = Country.get_gho_status_from_iso3(country_iso)
-                    if hrp is None:
-                        hrp = False
-                    if gho is None:
-                        gho = False
+                    hrp = "Y" if hrp else "N"
+                    gho = "Y" if gho else "N"
                     country_isos.append(country_iso)
                     hrps.append(hrp)
                     ghos.append(gho)

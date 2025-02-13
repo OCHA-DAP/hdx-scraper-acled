@@ -201,8 +201,8 @@ class Acled:
                     contents["Fatalities"] = None
 
                 # Add original dataset and resource ids
-                contents["dataset_id"] = dataset["id"]
-                contents["resource_id"] = resource["id"]
+                contents["dataset_hdx_id"] = dataset["id"]
+                contents["resource_hdx_id"] = resource["id"]
 
                 contents.rename(
                     columns={

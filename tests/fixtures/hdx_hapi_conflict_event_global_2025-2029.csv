@@ -1,4 +1,4 @@
-﻿location_code,has_hrp,in_gho,provider_admin1_name,provider_admin2_name,admin1_code,admin1_name,admin2_code,admin2_name,admin_level,event_type,events,fatalities,reference_period_start,reference_period_end,dataset_id,resource_id,warning,error
+﻿location_code,has_hrp,in_gho,provider_admin1_name,provider_admin2_name,admin1_code,admin1_name,admin2_code,admin2_name,admin_level,event_type,events,fatalities,reference_period_start,reference_period_end,dataset_hdx_id,resource_hdx_id,warning,error
 #country+code,#meta+has_hrp,#meta+in_gho,#adm1+name+provider,#adm2+name+provider,#adm1+code,#adm1+name,#adm2+code,#adm2+name,#adm+level,#event+type,#indicator+event+num,#affected+killed,#date+start,#date+end,#meta+dataset_id,#meta+resource_id,#meta+warning,#meta+error
 ALB,N,N,,,,,,,0,civilian_targeting,0,0,2025-01-01 00:00:00+00:00,2025-01-31 00:00:00+00:00,921fe117-7158-437b-943d-94969d545362,fb139931-641f-4428-be77-429972878e19,,
 DZA,N,N,,,,,,,0,civilian_targeting,0,0,2025-01-01 00:00:00+00:00,2025-01-31 00:00:00+00:00,921fe117-7158-437b-943d-94969d545362,fb139931-641f-4428-be77-429972878e19,,

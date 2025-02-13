@@ -128,23 +128,18 @@ class Acled:
                     end_dates.append(end_date)
 
                     # Fill in pcodes and names
-                    warning = None
                     if admin_level == 0:
                         adm1_pcodes.append(None)
                         adm2_pcodes.append(None)
                         adm1_names.append(None)
                         adm2_names.append(None)
+                        warnings.append(None)
 
+                    warning = None
                     if admin_level == 2:
                         pcode = contents["Admin2 Pcode"][i]
                         admin2_name = contents["Admin2"][i]
                         if not pcode:
-                            self._error_handler.add_missing_value_message(
-                                "ACLED",
-                                dataset_name,
-                                f"admin {admin_level} pcode",
-                                admin2_name,
-                            )
                             warning = f"Missing pcode for {admin2_name}!"
                         elif pcode not in self._admins[1].pcodes:
                             matched_pcode = self._admins[1].convert_admin_pcode_length(
@@ -199,6 +194,7 @@ class Acled:
                 contents["admin2_code"] = adm2_pcodes
                 contents["admin1_name"] = adm1_names
                 contents["admin2_name"] = adm2_names
+                contents["warning"] = warnings
 
                 # Add fatalities column
                 if "Fatalities" not in headers:

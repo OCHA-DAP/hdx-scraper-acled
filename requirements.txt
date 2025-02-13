@@ -87,7 +87,7 @@ more-itertools==10.6.0
     # via inflect
 num2words==0.5.14
     # via quantulum3
-numpy==2.2.2
+numpy==2.2.3
     # via pandas
 openpyxl==3.1.5
     # via hdx-python-utilities

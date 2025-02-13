@@ -31,7 +31,7 @@ click==8.1.8
     # via
     #   -c requirements.txt
     #   typer
-coverage==7.6.11
+coverage==7.6.12
     # via pytest-cov
 defopt==6.4.0
     # via
@@ -157,7 +157,7 @@ num2words==0.5.14
     # via
     #   -c requirements.txt
     #   quantulum3
-numpy==2.2.2
+numpy==2.2.3
     # via
     #   -c requirements.txt
     #   pandas

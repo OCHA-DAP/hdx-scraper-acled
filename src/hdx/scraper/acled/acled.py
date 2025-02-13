@@ -239,7 +239,7 @@ class Acled:
     def generate_dataset(self) -> Optional[Dataset]:
         dataset = Dataset(
             {
-                "name": "hdx-hapi-conflict-events",
+                "name": "hdx-hapi-conflict-event",
                 "title": "HDX HAPI - Coordination & Context: Conflict Events",
             }
         )

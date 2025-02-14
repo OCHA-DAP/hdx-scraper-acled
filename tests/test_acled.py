@@ -71,7 +71,7 @@ class TestAcled:
                     acled.download_data(2025)
                     assert len(acled.dates) == 6
                     assert len(acled.data) == 2
-                    assert len(acled.data["2025-2029"]) == 14373
+                    assert len(acled.data[2025]) == 14373
 
                     dataset = acled.generate_dataset()
                     dataset.update_from_yaml(path=join(config_dir, "hdx_dataset_static.yaml"))
@@ -115,17 +115,17 @@ class TestAcled:
                     resources = dataset.get_resources()
                     assert len(resources) == 2
                     assert resources[0] == {
-                        "description": "Conflict Event data from HDX HAPI (2025-2029), "
+                        "description": "Conflict Event data from HDX HAPI (2025), "
                         "please see [the documentation](https://hdx-hapi.readthedocs.io/en/"
                         "latest/data_usage_guides/coordination_and_context/#conflict-events) "
                         "for more information",
                         "format": "csv",
-                        "name": "Global Coordination & Context: Conflict Events (2025-2029)",
+                        "name": "Global Coordination & Context: Conflict Events (2025)",
                         "resource_type": "file.upload",
                         "url_type": "upload",
                     }
 
                     assert filecmp.cmp(
-                        join(temp_folder, "hdx_hapi_conflict_event_global_2025-2029.csv"),
-                        join(fixtures_dir, "hdx_hapi_conflict_event_global_2025-2029.csv"),
+                        join(temp_folder, "hdx_hapi_conflict_event_global_2025.csv"),
+                        join(fixtures_dir, "hdx_hapi_conflict_event_global_2025.csv"),
                     )

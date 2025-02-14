@@ -34,7 +34,7 @@ et-xmlfile==2.0.0
     # via openpyxl
 frictionless==5.18.0
     # via hdx-python-utilities
-hdx-python-api==6.3.7
+hdx-python-api==6.3.8
     # via hdx-scraper-acled (pyproject.toml)
 hdx-python-country==3.8.8
     # via hdx-python-api

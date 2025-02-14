@@ -216,20 +216,18 @@ class Acled:
                 )
 
                 # Split data by years
-                for year_start in range(1995, current_year + 1, 5):
-                    year_end = year_start + 4
-                    year_range = f"{year_start}-{year_end}"
+                for year in range(min(contents["Year"]), current_year + 1):
                     subset = contents.loc[
-                        (contents["Year"] >= year_start) & (contents["Year"] <= year_end),
+                        contents["Year"] == year,
                         self._configuration["hxl_tags"].keys(),
                     ]
                     if len(subset) == 0:
                         continue
 
-                    if year_range in self.data:
-                        self.data[year_range] = concat([self.data[year_range], subset])
+                    if year in self.data:
+                        self.data[year] = concat([self.data[year], subset])
                     else:
-                        self.data[year_range] = subset
+                        self.data[year] = subset
         return
 
     def generate_dataset(self) -> Optional[Dataset]:
@@ -247,12 +245,12 @@ class Acled:
 
         hxl_tags = self._configuration["hxl_tags"]
         headers = list(hxl_tags.keys())
-        for date_range in reversed(self.data.keys()):
-            data = self.data[date_range].to_dict(orient="records")
+        for year in reversed(self.data.keys()):
+            data = self.data[year].to_dict(orient="records")
             resourcedata = {
-                "name": self._configuration["resource_name"].replace("date_range", date_range),
+                "name": self._configuration["resource_name"].replace("year", str(year)),
                 "description": self._configuration["resource_description"].replace(
-                    "date_range", date_range
+                    "year", str(year)
                 ),
             }
             dataset.generate_resource_from_iterable(
@@ -260,7 +258,7 @@ class Acled:
                 data,
                 hxl_tags,
                 self._temp_dir,
-                f"hdx_hapi_conflict_event_global_{date_range}.csv",
+                f"hdx_hapi_conflict_event_global_{year}.csv",
                 resourcedata,
                 encoding="utf-8-sig",
             )

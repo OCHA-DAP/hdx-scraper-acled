@@ -5,9 +5,9 @@ datasets:
   - "demonstration-events"
   - "political-violence-events-and-fatalities"
 
-resource_name: "Global Coordination & Context: Conflict Events (date_range)"
+resource_name: "Global Coordination & Context: Conflict Events (year)"
 
-resource_description: "Conflict Event data from HDX HAPI (date_range), please see [the documentation](https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/coordination_and_context/#conflict-events) for more information"
+resource_description: "Conflict Event data from HDX HAPI (year), please see [the documentation](https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/coordination_and_context/#conflict-events) for more information"
 
 sheets:
   - "Non_HRP"

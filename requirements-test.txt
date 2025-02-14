@@ -62,7 +62,7 @@ frictionless==5.18.0
     # via
     #   -c requirements.txt
     #   hdx-python-utilities
-hdx-python-api==6.3.7
+hdx-python-api==6.3.8
     # via
     #   -c requirements.txt
     #   hdx-scraper-acled (pyproject.toml)

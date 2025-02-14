@@ -76,7 +76,7 @@ hdx-python-utilities==3.8.3
     #   hdx-scraper-acled (pyproject.toml)
     #   hdx-python-api
     #   hdx-python-country
-humanize==4.11.0
+humanize==4.12.0
     # via
     #   -c requirements.txt
     #   frictionless

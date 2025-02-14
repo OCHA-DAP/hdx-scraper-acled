@@ -140,12 +140,13 @@ class Acled:
                         pcode = contents["Admin2 Pcode"][i]
                         admin2_name = contents["Admin2"][i]
                         if not pcode:
-                            warning = f"Missing pcode for {admin2_name}!"
+                            warning = f"Missing pcode for {admin2_name}"
                         elif pcode not in self._admins[1].pcodes:
                             matched_pcode = self._admins[1].convert_admin_pcode_length(
                                 country_iso, pcode, parent=contents["Admin1 Pcode"][i]
                             )
                             if matched_pcode:
+                                warning = f"Pcode unknown {pcode}->{matched_pcode}"
                                 pcode = matched_pcode
                             else:
                                 self._error_handler.add_missing_value_message(
@@ -154,7 +155,7 @@ class Acled:
                                     f"admin {admin_level} pcode",
                                     pcode,
                                 )
-                                warning = f"Unknown pcode {pcode}!"
+                                warning = f"Unknown pcode {pcode}"
                                 admin1_name = contents["Admin1"][1]
                                 adm1_pcode, _ = self._admins[0].get_pcode(
                                     country_iso, admin1_name
@@ -163,6 +164,7 @@ class Acled:
                                     pcode, _ = self._admins[1].get_pcode(
                                         country_iso, admin2_name, parent=adm1_pcode
                                     )
+                                    warning = warning + f"->{pcode}"
                         if not pcode:
                             self._error_handler.add_missing_value_message(
                                 "ACLED",

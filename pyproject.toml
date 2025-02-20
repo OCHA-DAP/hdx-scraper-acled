@@ -13,6 +13,7 @@ name = "hdx-scraper-acled"
 requires-python = ">=3.12"
 dependencies = [
   "hdx-python-api",
+  "hdx-python-scraper",
   "hdx-python-utilities",
   "pandas",
 ]

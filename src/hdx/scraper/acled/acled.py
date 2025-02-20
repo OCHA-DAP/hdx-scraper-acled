@@ -10,7 +10,8 @@ from hdx.api.utilities.hdx_error_handler import HDXErrorHandler
 from hdx.data.dataset import Dataset
 from hdx.location.adminlevel import AdminLevel
 from hdx.location.country import Country
-from hdx.utilities.dateparse import parse_date_range
+from hdx.scraper.framework.utilities.hapi_admins import complete_admins
+from hdx.utilities.dateparse import iso_string_from_datetime, parse_date_range
 from hdx.utilities.retriever import Retrieve
 from pandas import concat, read_excel
 
@@ -104,14 +105,13 @@ class Acled:
                 warnings = []
 
                 for i in range(len(contents)):
+                    row = contents.iloc[i]
                     # Get ISO code, HRP and GHO status
                     if "ISO3" in headers:
-                        country_iso = contents["ISO3"][i]
+                        country_iso = row["ISO3"]
                     else:
-                        country_iso = Country.get_iso3_country_code_fuzzy(
-                            contents["Country"][i]
-                        )[0]
-                    if contents["Country"][i] == "Kosovo":
+                        country_iso = Country.get_iso3_country_code_fuzzy(row["Country"])[0]
+                    if row["Country"] == "Kosovo":
                         country_iso = "XKX"
                     hrp = Country.get_hrp_status_from_iso3(country_iso)
                     gho = Country.get_gho_status_from_iso3(country_iso)
@@ -121,71 +121,42 @@ class Acled:
                     hrps.append(hrp)
                     ghos.append(gho)
 
-                    month = contents["Month"][i]
-                    year = contents["Year"][i]
+                    month = row["Month"]
+                    year = row["Year"]
                     start_date, end_date = parse_date_range(f"{month} {year}")
-                    start_dates.append(start_date)
-                    end_dates.append(end_date)
+                    start_dates.append(iso_string_from_datetime(start_date))
+                    end_dates.append(iso_string_from_datetime(end_date))
 
                     # Fill in pcodes and names
-                    if admin_level == 0:
-                        adm1_pcodes.append(None)
-                        adm2_pcodes.append(None)
-                        adm1_names.append(None)
-                        adm2_names.append(None)
-                        warnings.append(None)
-
+                    adm_codes = [None, None]
+                    adm_names = [None, None]
                     warning = None
+
                     if admin_level == 2:
-                        pcode = contents["Admin2 Pcode"][i]
-                        admin2_name = contents["Admin2"][i]
-                        if not pcode:
-                            warning = f"Missing pcode for {admin2_name}"
-                        elif pcode not in self._admins[1].pcodes:
-                            matched_pcode = self._admins[1].convert_admin_pcode_length(
-                                country_iso, pcode, parent=contents["Admin1 Pcode"][i]
-                            )
-                            if matched_pcode:
-                                warning = f"Pcode unknown {pcode}->{matched_pcode}"
-                                pcode = matched_pcode
-                            else:
-                                self._error_handler.add_missing_value_message(
-                                    "ACLED",
-                                    dataset_name,
-                                    f"admin {admin_level} pcode",
-                                    pcode,
-                                )
-                                warning = f"Unknown pcode {pcode}"
-                                admin1_name = contents["Admin1"][1]
-                                adm1_pcode, _ = self._admins[0].get_pcode(
-                                    country_iso, admin1_name
-                                )
-                                if admin2_name:
-                                    pcode, _ = self._admins[1].get_pcode(
-                                        country_iso, admin2_name, parent=adm1_pcode
-                                    )
-                                    warning = warning + f"->{pcode}"
-                        if not pcode:
-                            self._error_handler.add_missing_value_message(
+                        provider_adm_names = [row["Admin1"], row["Admin2"]]
+                        adm_codes = [row["Admin1 Pcode"], row["Admin2 Pcode"]]
+                        adm_names = ["", ""]
+                        adm_level, warning = complete_admins(
+                            self._admins,
+                            country_iso,
+                            provider_adm_names,
+                            adm_codes,
+                            adm_names,
+                            fuzzy_match=False,
+                        )
+                        for w in warning:
+                            self._error_handler.add_message(
                                 "ACLED",
                                 dataset_name,
-                                "admin 2 pcode",
-                                admin2_name,
+                                w,
+                                message_type="warning",
                             )
-                            adm1_pcodes.append(None)
-                            adm2_pcodes.append(None)
-                            adm1_names.append(None)
-                            adm2_names.append(None)
-                            warnings.append(warning)
-                            continue
-                        adm2_pcodes.append(pcode)
-                        adm2_name = self._admins[1].pcode_to_name.get(pcode)
-                        adm2_names.append(adm2_name)
-                        adm1_pcode = self._admins[1].pcode_to_parent.get(pcode)
-                        adm1_pcodes.append(adm1_pcode)
-                        adm1_name = self._admins[0].pcode_to_name.get(adm1_pcode)
-                        adm1_names.append(adm1_name)
-                        warnings.append(warning)
+                        warning = "|".join(warning)
+                    adm1_pcodes.append(adm_codes[0])
+                    adm2_pcodes.append(adm_codes[1])
+                    adm1_names.append(adm_names[0])
+                    adm2_names.append(adm_names[1])
+                    warnings.append(warning)
 
                 contents["ISO3"] = country_isos
                 contents["has_hrp"] = hrps

@@ -8,7 +8,7 @@ attrs==25.1.0
     #   jsonlines
     #   jsonschema
     #   referencing
-cachetools==5.5.1
+cachetools==5.5.2
     # via google-auth
 certifi==2025.1.31
     # via requests
@@ -178,7 +178,7 @@ rfc3986==2.0.0
     # via frictionless
 rich==13.9.4
     # via typer
-rpds-py==0.22.3
+rpds-py==0.23.1
     # via
     #   jsonschema
     #   referencing
@@ -188,7 +188,7 @@ ruamel-yaml==0.18.10
     # via hdx-python-utilities
 ruamel-yaml-clib==0.2.12
     # via ruamel-yaml
-setuptools==75.8.0
+setuptools==75.8.1
     # via ckanapi
 shellingham==1.5.4
     # via typer

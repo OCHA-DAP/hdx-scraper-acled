@@ -98,7 +98,14 @@ class TestAcled:
                         "For more information, please see the HDX HAPI\n"
                         "[landing page](https://data.humdata.org/hapi)\n"
                         "and\n"
-                        "[documentation](https://hdx-hapi.readthedocs.io/en/latest/).\n",
+                        "[documentation](https://hdx-hapi.readthedocs.io/en/latest/).\n"
+                        "\n"
+                        "Warnings typically indicate corrections have been made to\n"
+                        "the data or show things to look out for. Rows with only warnings\n"
+                        "are considered complete, and are made available via the API.\n"
+                        "Errors usually mean that the data is incomplete or unusable.\n"
+                        "Rows with any errors are not present in the API but are included\n"
+                        "here for transparency.\n",
                         "owner_org": "hdx-hapi",
                         "package_creator": "HDX Data Systems Team",
                         "private": False,

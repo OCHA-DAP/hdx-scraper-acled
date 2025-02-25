@@ -8,6 +8,23 @@ private: False
 maintainer: aa13de36-28c5-47a7-8d0b-6d7c754ba8c8
 owner_org:  hdx-hapi
 data_update_frequency: 7
-notes: "This dataset contains data obtained from the\n[HDX Humanitarian API](https://hapi.humdata.org/) (HDX HAPI),\nwhich provides standardized humanitarian indicators designed\nfor seamless interoperability from multiple sources.\nThe data facilitates automated workflows and visualizations\nto support humanitarian decision making.\nFor more information, please see the HDX HAPI\n[landing page](https://data.humdata.org/hapi)\nand\n[documentation](https://hdx-hapi.readthedocs.io/en/latest/).\n"
+notes: |
+  This dataset contains data obtained from the
+  [HDX Humanitarian API](https://hapi.humdata.org/) (HDX HAPI),
+  which provides standardized humanitarian indicators designed
+  for seamless interoperability from multiple sources.
+  The data facilitates automated workflows and visualizations
+  to support humanitarian decision making.
+  For more information, please see the HDX HAPI
+  [landing page](https://data.humdata.org/hapi)
+  and
+  [documentation](https://hdx-hapi.readthedocs.io/en/latest/).
+
+  Warnings typically indicate corrections have been made to
+  the data or show things to look out for. Rows with only warnings
+  are considered complete, and are made available via the API.
+  Errors usually mean that the data is incomplete or unusable.
+  Rows with any errors are not present in the API but are included
+  here for transparency.
 subnational: "1"
 dataset_preview: no_preview

@@ -29,6 +29,7 @@ jobs:
         PREPREFIX: ${{ secrets.HDX_PIPELINE_PREPREFIX }}
         USER_AGENT: ${{ vars.USER_AGENT }}
         EXTRA_PARAMS: ${{ vars.EXTRA_PARAMS }}
+        ERR_TO_HDX: ${{ vars.ERR_TO_HDX }}
       run: |
         python -m hdx.scraper.acled
     - name: Send mail

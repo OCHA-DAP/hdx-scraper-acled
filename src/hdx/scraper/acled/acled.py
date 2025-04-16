@@ -89,7 +89,9 @@ class Acled:
                     self._error_handler.add_message(
                         "ACLED",
                         dataset_name,
-                        f"{sum(duplicates)} duplicates found",
+                        f"{sum(duplicates)} duplicates found in {sheet_name} sheet",
+                        resource["name"],
+                        err_to_hdx=True,
                     )
 
                 # Loop through rows to check pcodes, get ISO, HRP/GHO status, dates

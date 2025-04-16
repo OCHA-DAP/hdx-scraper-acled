@@ -6,7 +6,9 @@ script then creates in HDX.
 """
 
 import logging
+from os import getenv
 from os.path import dirname, expanduser, join
+from typing import Optional
 
 from hdx.api.configuration import Configuration
 from hdx.api.utilities.hdx_error_handler import HDXErrorHandler
@@ -29,19 +31,21 @@ _UPDATED_BY_SCRIPT = "HDX Scraper: ACLED"
 def main(
     save: bool = True,
     use_saved: bool = False,
-    err_to_hdx: bool = False,
+    err_to_hdx: Optional[bool] = None,
 ) -> None:
     """Generate datasets and create them in HDX
 
     Args:
         save (bool): Save downloaded data. Defaults to True.
         use_saved (bool): Use saved data. Defaults to False.
-        err_to_hdx (bool): Whether to write any errors to HDX metadata. Defaults to False.
+        err_to_hdx (Optional[bool]): Whether to write any errors to HDX metadata.
 
     Returns:
         None
     """
     logger.info(f"##### {_USER_AGENT_LOOKUP} ####")
+    if err_to_hdx is None:
+        err_to_hdx = getenv("ERR_TO_HDX")
     configuration = Configuration.read()
     if not User.check_current_user_organization_access("hdx-hapi", "create_dataset"):
         raise PermissionError("API Token does not give access to HDX-HAPI organisation!")

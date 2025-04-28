@@ -48,7 +48,9 @@ def main(
         err_to_hdx = getenv("ERR_TO_HDX")
     configuration = Configuration.read()
     if not User.check_current_user_organization_access("hdx-hapi", "create_dataset"):
-        raise PermissionError("API Token does not give access to HDX-HAPI organisation!")
+        raise PermissionError(
+            "API Token does not give access to HDX-HAPI organisation!"
+        )
 
     with HDXErrorHandler(write_to_hdx=err_to_hdx) as error_handler:
         with temp_dir(folder=_USER_AGENT_LOOKUP) as temp_folder:
@@ -88,5 +90,7 @@ if __name__ == "__main__":
         main,
         user_agent_config_yaml=join(expanduser("~"), ".useragents.yaml"),
         user_agent_lookup=_USER_AGENT_LOOKUP,
-        project_config_yaml=join(dirname(__file__), "config", "project_configuration.yaml"),
+        project_config_yaml=join(
+            dirname(__file__), "config", "project_configuration.yaml"
+        ),
     )

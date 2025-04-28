@@ -74,9 +74,9 @@ class Acled:
                 subset = contents[
                     ["Admin2 Pcode", "Admin1", "Admin2", "event_type", "Month", "Year"]
                 ]
-                subset.loc[contents["Admin2 Pcode"].isna(), "Admin2 Pcode"] = contents.loc[
-                    contents["Admin2 Pcode"].isna(), "Country"
-                ]
+                subset.loc[contents["Admin2 Pcode"].isna(), "Admin2 Pcode"] = (
+                    contents.loc[contents["Admin2 Pcode"].isna(), "Country"]
+                )
                 duplicates = subset.duplicated(keep=False)
                 contents["warning"] = None
                 contents["error"] = None
@@ -112,7 +112,9 @@ class Acled:
                     if "ISO3" in headers:
                         country_iso = row["ISO3"]
                     else:
-                        country_iso = Country.get_iso3_country_code_fuzzy(row["Country"])[0]
+                        country_iso = Country.get_iso3_country_code_fuzzy(
+                            row["Country"]
+                        )[0]
                     if row["Country"] == "Kosovo":
                         country_iso = "XKX"
                     hrp = Country.get_hrp_status_from_iso3(country_iso)
@@ -227,6 +229,7 @@ class Acled:
                 "description": self._configuration["resource_description"].replace(
                     "year", str(year)
                 ),
+                "p_coded": True,
             }
             dataset.generate_resource_from_iterable(
                 headers,

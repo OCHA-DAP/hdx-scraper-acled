@@ -31,7 +31,7 @@ jobs:
         EXTRA_PARAMS: ${{ vars.EXTRA_PARAMS }}
         ERR_TO_HDX: ${{ vars.ERR_TO_HDX }}
       run: |
-        python -m hdx.scraper.{{cookiecutter.scraper_name}}
+        python -m hdx.scraper.acled
     - name: Send mail
       if: failure()
       uses: dawidd6/action-send-mail@v3

@@ -229,6 +229,7 @@ class Acled:
                 "description": self._configuration["resource_description"].replace(
                     "year", str(year)
                 ),
+                "p_coded": True,
             }
             dataset.generate_resource_from_iterable(
                 headers,

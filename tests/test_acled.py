@@ -90,12 +90,13 @@ class TestAcled:
                     resources = dataset.get_resources()
                     assert len(resources) == 2
                     assert resources[0] == {
+                        "name": "Global Coordination & Context: Conflict Events (2025)",
                         "description": "Conflict Event data from HDX HAPI (2025), "
                         "please see [the documentation](https://hdx-hapi.readthedocs.io/en/"
                         "latest/data_usage_guides/coordination_and_context/#conflict-events) "
                         "for more information",
+                        "p_coded": True,
                         "format": "csv",
-                        "name": "Global Coordination & Context: Conflict Events (2025)",
                         "resource_type": "file.upload",
                         "url_type": "upload",
                     }

@@ -19,7 +19,7 @@ from hdx.utilities.downloader import Download
 from hdx.utilities.path import temp_dir
 from hdx.utilities.retriever import Retrieve
 
-from src.hdx.scraper.acled.acled import Acled
+from hdx.scraper.acled.pipeline import Pipeline
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +64,7 @@ def main(
                     use_saved=use_saved,
                 )
 
-                acled = Acled(configuration, retriever, temp_folder, error_handler)
+                acled = Pipeline(configuration, retriever, temp_folder, error_handler)
                 acled.get_pcodes()
 
                 today = now_utc()

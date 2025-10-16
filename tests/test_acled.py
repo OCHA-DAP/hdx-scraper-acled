@@ -6,7 +6,7 @@ from hdx.utilities.downloader import Download
 from hdx.utilities.path import temp_dir
 from hdx.utilities.retriever import Retrieve
 
-from hdx.scraper.acled.acled import Acled
+from hdx.scraper.acled.pipeline import Pipeline
 
 
 class TestAcled:
@@ -28,7 +28,9 @@ class TestAcled:
                         save=False,
                         use_saved=True,
                     )
-                    acled = Acled(configuration, retriever, temp_folder, error_handler)
+                    acled = Pipeline(
+                        configuration, retriever, temp_folder, error_handler
+                    )
                     acled.get_pcodes()
                     acled.download_data(2025)
                     assert len(acled.dates) == 6
@@ -97,8 +99,6 @@ class TestAcled:
                         "for more information",
                         "p_coded": True,
                         "format": "csv",
-                        "resource_type": "file.upload",
-                        "url_type": "upload",
                     }
 
                     assert_files_same(

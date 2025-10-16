@@ -10,11 +10,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hdx-scraper-acled"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
-  "hdx-python-api",
-  "hdx-python-scraper",
-  "hdx-python-utilities",
+  "hdx-python-scraper>= 2.6.5",
+  "hdx-python-api>= 6.5.2",
+  "hdx-python-country>= 3.9.8",
+  "hdx-python-utilities>= 3.9.5",
   "pandas",
 ]
 

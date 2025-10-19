@@ -14,26 +14,26 @@ sheets:
   - "HRP_1"
   - "HRP_2"
 
-hxl_tags:
-  location_code: "#country+code"
-  has_hrp: "#meta+has_hrp"
-  in_gho: "#meta+in_gho"
-  provider_admin1_name: "#adm1+name+provider"
-  provider_admin2_name: "#adm2+name+provider"
-  admin1_code: "#adm1+code"
-  admin1_name: "#adm1+name"
-  admin2_code: "#adm2+code"
-  admin2_name: "#adm2+name"
-  admin_level: "#adm+level"
-  event_type: "#event+type"
-  events: "#indicator+event+num"
-  fatalities: "#affected+killed"
-  reference_period_start: "#date+start"
-  reference_period_end: "#date+end"
-  dataset_hdx_id: "#meta+dataset_id"
-  resource_hdx_id: "#meta+resource_id"
-  warning: "#meta+warning"
-  error: "#meta+error"
+headers:
+  - location_code
+  - has_hrp
+  - in_gho
+  - provider_admin1_name
+  - provider_admin2_name
+  - admin1_code
+  - admin1_name
+  - admin2_code
+  - admin2_name
+  - admin_level
+  - event_type
+  - events
+  - fatalities
+  - reference_period_start
+  - reference_period_end
+  - dataset_hdx_id
+  - resource_hdx_id
+  - warning
+  - error
 
 tags:
   - "conflict-violence"

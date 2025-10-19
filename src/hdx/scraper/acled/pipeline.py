@@ -18,7 +18,7 @@ from pandas import concat, read_excel
 logger = logging.getLogger(__name__)
 
 
-class Acled:
+class Pipeline:
     def __init__(
         self,
         configuration: Configuration,
@@ -196,7 +196,7 @@ class Acled:
                 for year in range(min(contents["Year"]), current_year + 1):
                     subset = contents.loc[
                         contents["Year"] == year,
-                        self._configuration["hxl_tags"].keys(),
+                        self._configuration["headers"],
                     ]
                     if len(subset) == 0:
                         continue
@@ -220,8 +220,7 @@ class Acled:
         end_date = max(self.dates)
         dataset.set_time_period(start_date, end_date)
 
-        hxl_tags = self._configuration["hxl_tags"]
-        headers = list(hxl_tags.keys())
+        headers = self._configuration["headers"]
         for year in reversed(self.data.keys()):
             data = self.data[year].to_dict(orient="records")
             resourcedata = {
@@ -231,13 +230,12 @@ class Acled:
                 ),
                 "p_coded": True,
             }
-            dataset.generate_resource_from_iterable(
-                headers,
-                data,
-                hxl_tags,
+            dataset.generate_resource(
                 self._temp_dir,
                 f"hdx_hapi_conflict_event_global_{year}.csv",
+                data,
                 resourcedata,
+                headers,
                 encoding="utf-8-sig",
             )
 

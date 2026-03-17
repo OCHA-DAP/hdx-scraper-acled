@@ -29,14 +29,14 @@ _UPDATED_BY_SCRIPT = "HDX Scraper: ACLED"
 
 
 def main(
-    save: bool = True,
+    save: bool = False,
     use_saved: bool = False,
     err_to_hdx: Optional[bool] = None,
 ) -> None:
     """Generate datasets and create them in HDX
 
     Args:
-        save (bool): Save downloaded data. Defaults to True.
+        save (bool): Save downloaded data. Defaults to False.
         use_saved (bool): Use saved data. Defaults to False.
         err_to_hdx (Optional[bool]): Whether to write any errors to HDX metadata.
 

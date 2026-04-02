@@ -81,10 +81,6 @@ class TestAcled:
                                 "name": "conflict-violence",
                                 "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
                             },
-                            {
-                                "name": "hxl",
-                                "vocabulary_id": "b891512e-9516-4bf5-962a-7a289772a2a1",
-                            },
                         ],
                         "title": "HDX HAPI - Coordination & Context: Conflict Events",
                     }

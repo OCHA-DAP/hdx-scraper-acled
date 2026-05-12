@@ -2,7 +2,6 @@
 """acled scraper"""
 
 import logging
-from typing import Optional
 
 import numpy as np
 from hdx.api.configuration import Configuration
@@ -207,7 +206,7 @@ class Pipeline:
                         self.data[year] = subset
         return
 
-    def generate_dataset(self) -> Optional[Dataset]:
+    def generate_dataset(self) -> Dataset | None:
         dataset = Dataset(
             {
                 "name": "hdx-hapi-conflict-event",

@@ -9,7 +9,7 @@ from hdx.api.utilities.hdx_error_handler import HDXErrorHandler
 from hdx.data.dataset import Dataset
 from hdx.location.adminlevel import AdminLevel
 from hdx.location.country import Country
-from hdx.scraper.framework.utilities.hapi_admins import complete_admins
+from hdx.pipelineutils.hapi_admins import complete_admins
 from hdx.utilities.dateparse import iso_string_from_datetime, parse_date_range
 from hdx.utilities.retriever import Retrieve
 from pandas import concat, read_excel

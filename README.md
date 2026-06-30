@@ -3,7 +3,51 @@
 [![Coverage Status](https://coveralls.io/repos/github/OCHA-DAP/hdx-scraper-acled/badge.svg?branch=main&ts=1)](https://coveralls.io/github/OCHA-DAP/hdx-scraper-acled?branch=main)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-This script pulls together global conflict data for use in HAPI. It creates one dataset on HDX.
+This script pulls together global conflict data for use in HAPI. It creates one dataset on HDX. It runs weekly on Fridays at around 9 AM UTC and takes approximately 30 minutes to complete.
+
+## Data Pipeline
+
+### API reads (~8 calls per run)
+
+- **P-code reference files** (2 downloads, ~1.4 MB total): a global admin1/admin2 p-code registry CSV (~1.4 MB) and a p-code format/length definitions CSV (~2 KB), both fetched from the HDX Tools GitHub repository.
+- **ACLED source datasets** (3 metadata reads + 3 Excel downloads): one HDX dataset metadata read and one Excel file download per source dataset (`civilian-targeting-events-and-fatalities`, `demonstration-events`, `political-violence-events-and-fatalities`). Each Excel file is several MB and contains three sheets: `Non_HRP`, `HRP_1`, and `HRP_2`.
+
+### API writes (~1 call per run)
+
+- **HDX dataset update** (1 write): the `hdx-hapi-conflict-event` dataset is created or updated with approximately 28–30 CSV resources, one per calendar year covered in the source data (1997 to the current year).
+
+### Temporary files
+
+- 3 downloaded ACLED Excel files: several MB each (~tens of MB total).
+- ~28–30 generated CSV files (one per year): a few MB each (~tens of MB total), written to a temporary directory before upload.
+
+### Uploaded files
+
+- ~28–30 CSV resources on HDX, each containing all conflict event rows for one calendar year. Each CSV has 19 columns and the row count grows with years of coverage and the number of HRP countries tracked at admin level 2.
+
+### Transformations
+
+The pipeline processes each of the 3 ACLED source datasets, reading all 3 sheets per file (9 sheets total):
+
+1. **Event type**: derived from the HDX dataset name by stripping the trailing `-events[-and-fatalities]` suffix and replacing hyphens with underscores (e.g. `civilian-targeting-events-and-fatalities` → `civilian_targeting`).
+
+2. **Admin level detection**: sheets with no `Admin1`/`Admin2` columns (`Non_HRP`) are assigned `admin_level = 0` (country-only); sheets with those columns (`HRP_1`, `HRP_2`) are assigned `admin_level = 2`.
+
+3. **Duplicate detection**: rows are checked for duplicates on the combination of admin2 p-code (or country name for admin_level 0), admin names, event type, month, and year. Duplicates are flagged with an `error` field and reported to the HDX error handler.
+
+4. **ISO3 resolution**: taken directly from the `ISO3` column when present (HRP sheets); otherwise fuzzy-matched from the `Country` name. Kosovo is special-cased to `XKX` regardless.
+
+5. **HRP/GHO status**: `has_hrp` (Y/N) and `in_gho` (Y/N) are looked up per ISO3 code from the `hdx-python-country` library.
+
+6. **Reference period**: `Month` + `Year` values are parsed into ISO 8601 date strings covering the full calendar month (`reference_period_start`, `reference_period_end`).
+
+7. **P-code validation** (admin_level 2 only): admin1 and admin2 p-codes and provider names are passed to `complete_admins()` from `hdx-pipelineutils`, which cross-references the global p-code registry to validate codes, fill in canonical admin names, and record any mismatches as warnings.
+
+8. **Column renaming**: source columns are renamed to the HAPI output schema (`ISO3` → `location_code`, `Admin1` → `provider_admin1_name`, `Admin2` → `provider_admin2_name`, `Fatalities` → `fatalities`, `Events` → `events`).
+
+9. **Provenance**: `dataset_hdx_id` and `resource_hdx_id` (from the source ACLED HDX dataset/resource) are added to every row.
+
+10. **Year partitioning**: all rows are partitioned by `Year`. Data from all 9 sheets is concatenated per year and written to a separate CSV, which is uploaded as an individual HDX resource.
 
 ## Development
 

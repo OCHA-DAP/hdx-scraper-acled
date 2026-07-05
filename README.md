@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/OCHA-DAP/hdx-scraper-acled/badge.svg?branch=main&ts=1)](https://coveralls.io/github/OCHA-DAP/hdx-scraper-acled?branch=main)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-This pipeline reads conflict events data from three [ACLED](https://acleddata.com/) datasets on HDX and produces a unified global conflict events dataset for [HDX HAPI](https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/coordination_and_context/#conflict-events). It makes approximately 8 reads from HDX (2 p-code reference files and 3 metadata reads + 3 Excel downloads for the ACLED source datasets) and 1 write to create or update the output dataset. It downloads 3 Excel files (several MB each) and generates ~28–30 yearly CSV files (~tens of MB total) in a temporary directory before uploading them as resources. For each row, the event type is derived from the source dataset name, ISO3 codes are resolved from an explicit column or fuzzy-matched from the country name, p-codes are validated against a global registry, HRP/GHO status is looked up per country, and reference period dates are constructed from month/year values. It runs weekly on Fridays at around 9 AM UTC and takes approximately 30 minutes to complete.
+This pipeline reads conflict events data from three [ACLED](https://acleddata.com/) datasets on HDX and produces a unified global conflict events dataset for [HDX HAPI](https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/coordination_and_context/#conflict-events). It makes approximately 8 reads from HDX (2 p-code reference files and 3 metadata reads + 3 Excel downloads for the ACLED source datasets) and 1 write to create or update the output dataset. It downloads 3 Excel files (several MB each) and generates a yearly CSV file per calendar year covered in the source data in a temporary directory before uploading them as resources. For each row, the event type is derived from the source dataset name, ISO3 codes are resolved from an explicit column or fuzzy-matched from the country name, p-codes are validated against a global registry, HRP/GHO status is looked up per country, and reference period dates are constructed from month/year values.
 
 ## Data Pipeline
 
@@ -14,16 +14,16 @@ This pipeline reads conflict events data from three [ACLED](https://acleddata.co
 
 ### API writes (~1 call per run)
 
-- **HDX dataset update** (1 write): the `hdx-hapi-conflict-event` dataset is created or updated with approximately 28–30 CSV resources, one per calendar year covered in the source data (1997 to the current year).
+- **HDX dataset update** (1 write): the `hdx-hapi-conflict-event` dataset is created or updated with one CSV resource per calendar year covered in the source data (1997 to the current year).
 
 ### Temporary files
 
-- 3 downloaded ACLED Excel files: several MB each (~tens of MB total).
-- ~28–30 generated CSV files (one per year): a few MB each (~tens of MB total), written to a temporary directory before upload.
+- 3 downloaded ACLED Excel files: several MB each.
+- Generated CSV files (one per year): a few MB each, written to a temporary directory before upload.
 
 ### Uploaded files
 
-- ~28–30 CSV resources on HDX, each containing all conflict event rows for one calendar year. Each CSV has 19 columns and the row count grows with years of coverage and the number of HRP countries tracked at admin level 2.
+- One CSV resource per calendar year on HDX, each containing all conflict event rows for that calendar year. Each CSV has 19 columns and the row count grows with years of coverage and the number of HRP countries tracked at admin level 2.
 
 ### Transformations
 

@@ -19,6 +19,12 @@ dependencies = [
   "hdx-python-utilities>=4.0.8",
   "pandas",
 ]
+readme = "README.md"
+
+[project.urls]
+Homepage = "https://github.com/OCHA-DAP/hdx-scraper-acled"
+Repository = "https://github.com/OCHA-DAP/hdx-scraper-acled"
+Issues = "https://github.com/OCHA-DAP/hdx-scraper-acled/issues"
 
 [dependency-groups]
 dev = [

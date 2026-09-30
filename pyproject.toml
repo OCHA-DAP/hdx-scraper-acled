@@ -14,9 +14,9 @@ dynamic = ["version"]
 requires-python = ">=3.13"
 dependencies = [
   "hdx-python-api>=6.6.5",
-  "hdx-python-pipelineutils>=0.0.3",
-  "hdx-python-country>=4.1.1",
-  "hdx-python-utilities>=4.0.8",
+  "hdx-python-pipelineutils>=0.0.7",
+  "hdx-python-country>=4.2.2",
+  "hdx-python-utilities>=4.2.0",
   "pandas",
 ]
 readme = "README.md"
